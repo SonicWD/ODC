@@ -271,6 +271,13 @@ a:hover {
   color: var(--verde-claro);
 }
 
+.cabecera__escudo {
+  flex: none;
+  inline-size: 1.85rem;
+  block-size: auto;
+  object-fit: contain;
+}
+
 .cabecera__sigla {
   padding: 0.15rem 0.45rem;
   border: 1px solid var(--verde-linea);
@@ -874,6 +881,30 @@ a:hover {
 
 .portada::after {
   background: radial-gradient(28rem circle at var(--x, 78%) var(--y, 30%), rgb(0 217 146 / 0.13), transparent 70%);
+}
+
+.portada__marcas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.4rem;
+  margin-block-end: 1.25rem;
+}
+
+.portada__logo {
+  inline-size: min(17rem, 100%);
+  block-size: auto;
+  object-fit: contain;
+  /* El logo es verde oscuro: un velo claro lo hace legible sobre el lienzo negro. */
+  padding: 0.55rem 0.75rem;
+  border-radius: var(--radio);
+  background: rgb(255 255 255 / 0.92);
+}
+
+.portada__escudo {
+  inline-size: 4.5rem;
+  block-size: auto;
+  object-fit: contain;
 }
 
 .portada__titulo {

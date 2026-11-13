@@ -8,7 +8,7 @@ import { Guia } from "@/components/Guia";
 import { MenuLista } from "@/components/MenuLista";
 import { Ventana } from "@/components/Ventana";
 import { PANTALLAS, PORTADA, TOTAL, indice, pantallaDe, ruta } from "@/lib/pantallas";
-import { AUDIOS } from "@/lib/sitio";
+import { AUDIOS, conBase } from "@/lib/sitio";
 
 // Cabecera y barra inferior. Vive en el layout para que no se desmonte al cambiar de pantalla:
 // así solo el contenido participa en la transición.
@@ -31,9 +31,16 @@ export function Marco({ children }: { children: ReactNode }) {
       <header className="cabecera" style={{ viewTransitionName: "cabecera" }}>
         <div className="cabecera__fila">
           <Link className="cabecera__marca" href={ruta(PORTADA)} transitionTypes={["nav-back"]}>
+            <img
+              className="cabecera__escudo"
+              src={conBase("/logos/udec-escudo.png")}
+              alt=""
+              width={36}
+              height={54}
+            />
             <span className="cabecera__sigla">ODC</span>
             <span className="cabecera__nombre">Formalizar con inteligencia artificial</span>
-            <span className="solo-lector">, ir a la portada</span>
+            <span className="solo-lector">Universidad de Cundinamarca, ir a la portada</span>
           </Link>
           <p className="cabecera__posicion">
             <span className="solo-lector">Estás en: </span>

@@ -8,7 +8,7 @@ import { Prueba } from "@/components/Prueba";
 import { Ventana } from "@/components/Ventana";
 import { MENU, ruta } from "@/lib/pantallas";
 import { reiniciar, useProgreso } from "@/lib/progreso";
-import { POBLACION, REA, SITIO } from "@/lib/sitio";
+import { POBLACION, REA, SITIO, conBase } from "@/lib/sitio";
 
 // El brillo del fondo sigue al puntero. Es decorativo y solo se ve si el usuario acepta movimiento.
 function seguirPuntero(evento: PointerEvent<HTMLDivElement>) {
@@ -21,6 +21,23 @@ export function Portada() {
   return (
     <div className="portada" onPointerMove={seguirPuntero}>
       <div className="portada__texto">
+        <div className="portada__marcas">
+          <img
+            className="portada__logo"
+            src={conBase("/logos/udec-horizontal.png")}
+            alt="Universidad de Cundinamarca"
+            width={280}
+            height={130}
+          />
+          <img
+            className="portada__escudo"
+            src={conBase("/logos/udec-escudo.png")}
+            alt=""
+            width={72}
+            height={108}
+            aria-hidden="true"
+          />
+        </div>
         <p className="seccion">Objeto Digital de Conocimiento · Universidad de Cundinamarca</p>
         <h1 className="portada__titulo">
           {/* Cada palabra va en su caja para que entre por separado. El espacio queda fuera para que no se pierda. */}

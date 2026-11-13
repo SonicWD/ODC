@@ -25,7 +25,7 @@ export function Portada() {
         <div className="portada__marcas">
           <Image
             className="portada__logo"
-            src={conBase("/logos/udec-horizontal.png")}
+            src={conBase("/logos/udec-horizontal-claro.png")}
             alt="Universidad de Cundinamarca"
             width={280}
             height={130}

@@ -53,10 +53,13 @@ html {
   -webkit-text-size-adjust: 100%;
   /* La cabecera y la barra inferior son fijas: este margen evita que tapen el elemento con foco. */
   scroll-padding-block: 5.5rem 6.5rem;
+  min-block-size: 100%;
+  background: var(--lienzo);
 }
 
 body {
   margin: 0;
+  min-block-size: 100dvh;
   background: var(--lienzo);
   color: var(--texto);
   font-family: var(--fuente-texto), system-ui, sans-serif;
@@ -234,6 +237,7 @@ a:hover {
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto 1fr auto;
   min-block-size: 100dvh;
+  background: var(--lienzo);
   /* clip (no hidden): recorta lo que una animación saque por el lado sin romper la cabecera ni la barra fijas. */
   overflow-x: clip;
 }
@@ -243,7 +247,8 @@ a:hover {
   inset-block-start: 0;
   z-index: 20;
   border-block-end: 1px solid var(--linea);
-  background: rgb(14 15 14 / 0.82);
+  background: var(--lienzo);
+  background: color-mix(in srgb, var(--lienzo) 88%, transparent);
   backdrop-filter: blur(14px);
 }
 
@@ -436,7 +441,8 @@ a:hover {
   inset-block-end: 0;
   z-index: 20;
   border-block-start: 1px solid var(--linea);
-  background: rgb(18 20 19 / 0.88);
+  background: var(--lienzo);
+  background: color-mix(in srgb, var(--lienzo) 88%, transparent);
   backdrop-filter: blur(14px);
 }
 
@@ -862,13 +868,12 @@ a:hover {
   gap: 2.5rem;
 }
 
-/* Fondo de puntos y brillo. Son decorativos. */
+/* Fondo de puntos y brillo: cubre todo el bloque de portada, también en pantallas altas o anchas. */
 .portada::before,
 .portada::after {
   position: absolute;
-  inset: -4rem -1.25rem auto;
+  inset: -6rem -2rem -4rem;
   z-index: -1;
-  block-size: 36rem;
   content: "";
   pointer-events: none;
 }
@@ -876,18 +881,18 @@ a:hover {
 .portada::before {
   background-image: radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.13) 1px, transparent 0);
   background-size: 26px 26px;
-  mask-image: radial-gradient(ellipse 70% 70% at 50% 35%, #000 20%, transparent 75%);
+  mask-image: radial-gradient(ellipse 85% 80% at 50% 30%, #000 15%, transparent 78%);
 }
 
 .portada::after {
-  background: radial-gradient(28rem circle at var(--x, 78%) var(--y, 30%), rgb(0 217 146 / 0.13), transparent 70%);
+  background: radial-gradient(36rem circle at var(--x, 78%) var(--y, 30%), rgb(0 217 146 / 0.13), transparent 70%);
 }
 
 .portada__marcas {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 1rem 1.4rem;
+  gap: 1rem 1.5rem;
   margin-block-end: 1.25rem;
 }
 
@@ -895,10 +900,6 @@ a:hover {
   inline-size: min(17rem, 100%);
   block-size: auto;
   object-fit: contain;
-  /* El logo es verde oscuro: un velo claro lo hace legible sobre el lienzo negro. */
-  padding: 0.55rem 0.75rem;
-  border-radius: var(--radio);
-  background: rgb(255 255 255 / 0.92);
 }
 
 .portada__escudo {

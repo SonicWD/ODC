@@ -10,11 +10,14 @@ export type Opcion = { id: string; etiqueta: string; correcta: boolean; retro: s
 // Verdadero o falso y opción múltiple: una respuesta, retroalimentación inmediata.
 export function Opciones({
   clave,
+  caso,
   enunciado,
   opciones,
   repaso,
 }: {
   clave: string;
+  /** Situación o hallazgo sobre el que se pregunta. Se muestra antes del enunciado. */
+  caso?: string;
   enunciado: string;
   opciones: Opcion[];
   repaso: number;
@@ -38,6 +41,12 @@ export function Opciones({
     <section className="actividad">
       {progreso.actividades[clave] && !respuesta && (
         <p className="actividad__hecha">Ya resolviste esta actividad. Puedes repetirla.</p>
+      )}
+      {caso && (
+        <p className="caso">
+          <span className="caso__rotulo">Caso</span>
+          {caso}
+        </p>
       )}
       <fieldset className="actividad__grupo">
         <legend className="actividad__enunciado">{enunciado}</legend>

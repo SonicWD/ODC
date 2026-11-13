@@ -1,78 +1,93 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ruta } from "@/lib/pantallas";
 import { marcarActividad, useProgreso } from "@/lib/progreso";
 
-type Zona = "beneficio" | "limitacion" | "validacion";
-type Resultado = "bien" | "cruce" | "mal";
-
-const ZONAS: { clave: Zona; nombre: string }[] = [
-  { clave: "beneficio", nombre: "Beneficio" },
-  { clave: "limitacion", nombre: "Limitación" },
-  { clave: "validacion", nombre: "Validación" },
-];
-
-const FRASES: { id: string; texto: string; destino: Zona }[] = [
-  { id: "A", texto: "Deja pasos que otro puede abrir.", destino: "beneficio" },
-  { id: "B", texto: "Exige formación y supervisión.", destino: "limitacion" },
-  { id: "C", texto: "Los pasos quedan en un asistente.", destino: "validacion" },
-];
-
-const SIN_COLOCAR: Record<string, Zona | null> = { A: null, B: null, C: null };
-
-const RETRO: Record<Resultado, string> = {
-  bien: "Separaste el resultado, el costo y la comprobación.",
-  cruce: "La formación es el costo. El asistente es la forma de comprobar. Vuelve a la pantalla 6 y reintenta.",
-  mal: "Mira si cada frase habla de un resultado, de un costo o de una comprobación, y reintenta.",
+export type Zona = { clave: string; nombre: string };
+export type FraseSuelta = {
+  id: string;
+  texto: string;
+  /** De dónde sale la frase, por ejemplo «Kaufmann (2022)». */
+  fuente?: string;
+  /** Clave de la zona correcta. */
+  destino: string;
+  /** Pista que se muestra si la frase queda en otra zona. */
+  pista: string;
 };
 
-// Arrastre con ratón y, para teclado o pantallas táctiles, pulsar la frase y luego la columna.
-export function Arrastrar({ clave, repaso }: { clave: string; repaso: number }) {
+// Arrastre con ratón y, para teclado o pantallas táctiles, pulsar la frase y luego el botón de la columna.
+export function Arrastrar({
+  clave,
+  repaso,
+  enunciado,
+  zonas,
+  frases,
+  retroBien,
+}: {
+  clave: string;
+  repaso: number;
+  enunciado: string;
+  zonas: Zona[];
+  frases: FraseSuelta[];
+  retroBien: string;
+}) {
   const progreso = useProgreso();
-  const [lugar, setLugar] = useState(SIN_COLOCAR);
+  const [lugar, setLugar] = useState<Record<string, string | null>>({});
   const [tomada, setTomada] = useState<string | null>(null);
-  const [resultado, setResultado] = useState<Resultado | null>(null);
+  const [comprobado, setComprobado] = useState(false);
+  const banco = useRef<HTMLUListElement>(null);
+  const botonComprobar = useRef<HTMLButtonElement>(null);
 
-  const sueltas = FRASES.filter((f) => lugar[f.id] === null);
+  const zonaDe = (id: string) => lugar[id] ?? null;
+  const sueltas = frases.filter((f) => zonaDe(f.id) === null);
   const completo = sueltas.length === 0;
+  const erradas = frases.filter((f) => zonaDe(f.id) !== f.destino);
+  const bien = erradas.length === 0;
 
-  function colocar(id: string | null, zona: Zona) {
-    if (!id || !(id in lugar) || resultado) return;
+  function colocar(id: string | null, zona: string) {
+    if (!id || comprobado || !frases.some((f) => f.id === id)) return;
     setLugar({ ...lugar, [id]: zona });
     setTomada(null);
   }
 
+  // Con teclado: al ubicar una frase el foco pasa a la siguiente frase suelta o, si no quedan, a Comprobar.
+  function ponerTomada(zona: string) {
+    colocar(tomada, zona);
+    requestAnimationFrame(() => {
+      const siguiente = banco.current?.querySelector("button") ?? botonComprobar.current;
+      siguiente?.focus();
+    });
+  }
+
   function quitar(id: string) {
     setLugar({ ...lugar, [id]: null });
-    setResultado(null);
   }
 
   function comprobar() {
-    const aciertos = FRASES.every((f) => lugar[f.id] === f.destino);
-    const cruce = lugar.B === "validacion" && lugar.C === "limitacion";
-    setResultado(aciertos ? "bien" : cruce ? "cruce" : "mal");
-    if (aciertos) marcarActividad(clave, true);
+    setComprobado(true);
+    if (bien) marcarActividad(clave, true);
   }
 
+  // Las frases bien ubicadas se quedan; las demás vuelven a la lista.
   function reintentar() {
-    setLugar(SIN_COLOCAR);
+    setLugar(Object.fromEntries(frases.map((f) => [f.id, zonaDe(f.id) === f.destino ? f.destino : null])));
     setTomada(null);
-    setResultado(null);
+    setComprobado(false);
   }
 
   return (
     <section className="actividad">
-      {progreso.actividades[clave] && !resultado && (
+      {progreso.actividades[clave] && !comprobado && (
         <p className="actividad__hecha">Ya resolviste esta actividad. Puedes repetirla.</p>
       )}
-      <p className="actividad__enunciado">Lleva cada frase a la columna que le corresponde.</p>
+      <p className="actividad__enunciado">{enunciado}</p>
       <p className="actividad__ayuda">
-        Arrastra la frase. También puedes pulsarla y luego pulsar el botón de la columna.
+        Arrastra cada frase a su columna. También puedes pulsarla y elegir la columna con los botones.
       </p>
 
-      <ul className="banco" role="list" aria-label="Frases por ubicar">
+      <ul ref={banco} className="banco" role="list" aria-label="Frases por ubicar">
         {sueltas.map((frase) => (
           <li key={frase.id}>
             <button
@@ -86,15 +101,36 @@ export function Arrastrar({ clave, repaso }: { clave: string; repaso: number }) 
                 evento.dataTransfer.effectAllowed = "move";
               }}
             >
-              <span className="frase__letra">{frase.id}</span> {frase.texto}
+              <span className="frase__letra">{frase.id}</span>
+              <span>
+                {frase.texto}
+                {frase.fuente && <span className="frase__fuente"> {frase.fuente}</span>}
+              </span>
             </button>
           </li>
         ))}
         {completo && <li className="banco__vacio">Todas las frases están ubicadas.</li>}
       </ul>
 
+      {!comprobado && !completo && (
+        <div className="destinos" role="group" aria-label="Poner la frase elegida en una columna">
+          <span className="destinos__rotulo">{tomada ? `Poner la frase ${tomada} en` : "Elige una frase"}</span>
+          {zonas.map((zona) => (
+            <button
+              key={zona.clave}
+              type="button"
+              className={`destinos__boton columna--${zona.clave}`}
+              disabled={!tomada}
+              onClick={() => ponerTomada(zona.clave)}
+            >
+              {zona.nombre}
+            </button>
+          ))}
+        </div>
+      )}
+
       <div className="zonas">
-        {ZONAS.map((zona) => (
+        {zonas.map((zona) => (
           <div
             key={zona.clave}
             className={`zona columna--${zona.clave}`}
@@ -106,55 +142,64 @@ export function Arrastrar({ clave, repaso }: { clave: string; repaso: number }) 
           >
             <h2 className="zona__nombre">{zona.nombre}</h2>
             <ul className="zona__frases" role="list">
-              {FRASES.filter((f) => lugar[f.id] === zona.clave).map((frase) => (
-                <li key={frase.id} className="frase frase--puesta">
-                  <span>
-                    <span className="frase__letra">{frase.id}</span> {frase.texto}
-                  </span>
-                  {!resultado && (
-                    <button type="button" className="frase__quitar" onClick={() => quitar(frase.id)}>
-                      Quitar<span className="solo-lector"> la frase {frase.id}</span>
-                    </button>
-                  )}
-                </li>
-              ))}
+              {frases
+                .filter((f) => zonaDe(f.id) === zona.clave)
+                .map((frase) => {
+                  const errada = comprobado && frase.destino !== zona.clave;
+                  return (
+                    <li key={frase.id} className={errada ? "frase frase--puesta frase--errada" : "frase frase--puesta"}>
+                      <span>
+                        <span className="frase__letra">{frase.id}</span> {frase.texto}
+                      </span>
+                      {!comprobado && (
+                        <button type="button" className="frase__quitar" onClick={() => quitar(frase.id)}>
+                          Quitar<span className="solo-lector"> la frase {frase.id}</span>
+                        </button>
+                      )}
+                    </li>
+                  );
+                })}
             </ul>
-            {!resultado && !completo && (
-              <button
-                type="button"
-                className="boton boton--suave boton--chico"
-                disabled={!tomada}
-                onClick={() => colocar(tomada, zona.clave)}
-              >
-                Poner en {zona.nombre}
-              </button>
-            )}
           </div>
         ))}
       </div>
 
-      {!resultado && (
-        <button type="button" className="boton" disabled={!completo} onClick={comprobar}>
+      {!comprobado && (
+        <button ref={botonComprobar} type="button" className="boton" disabled={!completo} onClick={comprobar}>
           Comprobar
         </button>
       )}
 
       <div role="status">
-        {resultado && (
-          <div className={resultado === "bien" ? "retro retro--bien" : "retro retro--mal"}>
-            <p className="retro__titulo">{resultado === "bien" ? "Correcto" : "Todavía no"}</p>
-            <p>{RETRO[resultado]}</p>
-            {resultado === "bien" ? (
-              <p>Puedes seguir.</p>
+        {comprobado && (
+          <div className={bien ? "retro retro--bien" : "retro retro--mal"}>
+            <p className="retro__titulo">
+              {bien ? "Correcto" : `${frases.length - erradas.length} de ${frases.length} en su columna`}
+            </p>
+            {bien ? (
+              <>
+                <p>{retroBien}</p>
+                <p>Puedes seguir.</p>
+              </>
             ) : (
-              <div className="retro__acciones">
-                <button type="button" className="boton" onClick={reintentar}>
-                  Reintentar
-                </button>
-                <Link className="boton boton--suave" href={ruta(repaso)}>
-                  Volver a la pantalla {repaso}
-                </Link>
-              </div>
+              <>
+                <p>Estas frases van en otra columna. Lee la pista y muévelas:</p>
+                <ul>
+                  {erradas.map((frase) => (
+                    <li key={frase.id}>
+                      <strong>{frase.id}.</strong> {frase.pista}
+                    </li>
+                  ))}
+                </ul>
+                <div className="retro__acciones">
+                  <button type="button" className="boton" onClick={reintentar}>
+                    Mover las que faltan
+                  </button>
+                  <Link className="boton boton--suave" href={ruta(repaso)}>
+                    Volver a la pantalla {repaso}
+                  </Link>
+                </div>
+              </>
             )}
           </div>
         )}

@@ -95,11 +95,19 @@ export function Formalizar() {
             Formalizan un demostrador de primer orden en Isabelle/HOL y dejan revisable la lógica de ese demostrador,
             no un resumen de su funcionamiento.
           </p>
+          <p>
+            Sus pruebas son declarativas: cada paso se declara, de forma parecida a las oraciones de una prueba
+            cuidadosa en papel.
+          </p>
         </Ficha>
         <Ficha cita="Sun y Yu (2020)" rotulo="Coq" fuente="sun2020" enlace="Artículo de Sun y Yu (2020)">
           <p>
             Hacen lo propio con una teoría de conjuntos en Coq: los axiomas y las pruebas quedan en un archivo que
             otro puede abrir.
+          </p>
+          <p>
+            La formalización completa tiene ocho axiomas, un esquema de axiomas, 62 definiciones y 148 teoremas o
+            corolarios.
           </p>
         </Ficha>
         <Ficha
@@ -216,6 +224,10 @@ export function Beneficios() {
             sostener con ese artículo es preciso: no solo se usa un demostrador, sino que la lógica de ese demostrador
             queda en un asistente y otra persona puede recorrerla.
           </p>
+          <p>
+            Los autores dicen para qué lo hicieron: enseñar cómo funcionan y cómo se usan estos demostradores. El
+            resultado permite estudiar código concreto junto con la verificación de que es correcto.
+          </p>
           <p>Eso no significa que el sistema reemplace a quien investiga.</p>
         </Ficha>
         <Ficha cita="Sun y Yu (2020)" rotulo="Coq" fuente="sun2020" enlace="Artículo de Sun y Yu (2020)">
@@ -223,6 +235,10 @@ export function Beneficios() {
             Construyen un sistema formal de teoría de conjuntos en Coq. Cambia la herramienta y cambia el objeto, pero
             el tipo de beneficio se parece: los axiomas y las pruebas quedan en un lenguaje que se puede comprobar, no
             en un resumen de la teoría.
+          </p>
+          <p>
+            Los teoremas que prueban ya se conocían, como el de Schröder-Bernstein. Lo que se gana no es un teorema
+            nuevo, sino que las pruebas quedan comprobadas dentro del asistente.
           </p>
         </Ficha>
         <Ficha
@@ -234,6 +250,10 @@ export function Beneficios() {
           <p>
             Formalizan un demostrador de resolución ordenada y muestran el mismo tipo de beneficio: la prueba queda
             dentro del asistente y no basta con aceptar el veredicto.
+          </p>
+          <p>
+            Parten de la primera mitad de un capítulo clásico sobre demostración por resolución. Según los autores,
+            el trabajo aclaró puntos finos de ese capítulo.
           </p>
         </Ficha>
       </div>
@@ -289,6 +309,10 @@ export function Limitaciones() {
             posible y, al mismo tiempo, que es especializada: hacen falta el circuito, la herramienta y alguien capaz
             de leer la prueba.
           </p>
+          <p>
+            El propio autor reconoce el costo: verificar multiplicadores todavía exige una cantidad importante de
+            trabajo manual. Su herramienta entrega certificados que comprobadores independientes pueden revisar.
+          </p>
           <p>Sin esa supervisión, el veredicto del sistema no queda integrado como conocimiento del curso.</p>
         </Ficha>
         <Ficha
@@ -301,6 +325,11 @@ export function Limitaciones() {
             Automatizan razonamiento en una lógica libre dentro de HOL. El estudio muestra alcance, porque hay lógicas
             que se pueden tratar de forma mecánica, y también cuidado: la automatización no debe tomarse como
             aceptación automática.
+          </p>
+          <p>
+            Lo prueban en teoría de categorías y, de paso, salieron a la luz errores menores en un libro de texto
+            reconocido. Aun así, los autores aclaran que no buscan resultados nuevos en esa área, sino mostrar una
+            forma de usar el razonamiento automático.
           </p>
           <p>
             El sistema opera sobre una lógica formal precisa. No autoriza a tratar cualquier texto académico como si
@@ -316,6 +345,11 @@ export function Limitaciones() {
           <p>
             Refuerzan el mismo límite en comprobadores de circuitos: la herramienta especializada no se usa sin quien
             sepa leerla.
+          </p>
+          <p>
+            Parten de una advertencia: el propio proceso de verificación puede contener errores. Por eso generan
+            certificados y presentan tres programas que los revisan. Uno de ellos, Pastèque, está verificado a su vez
+            en Isabelle/HOL.
           </p>
         </Ficha>
       </div>
@@ -391,6 +425,7 @@ export function Validacion() {
           <ul>
             <li>Que alguien pueda recorrer los pasos de la prueba.</li>
             <li>Que la prueba quede dentro del asistente.</li>
+            <li>Que un comprobador independiente revise el certificado de la prueba (Kaufmann, 2022).</li>
           </ul>
         </div>
         <div className="cuenta__lado cuenta__lado--no">
@@ -453,8 +488,9 @@ export function Caso() {
               abiertas
               beneficio={
                 <p>
-                  El beneficio es estrecho: esas pruebas muestran fallos de la ontología que de otro modo quedarían ocultos. No
-                  dice que el sistema arregle cualquier base de conocimiento.
+                  El beneficio es estrecho: esas pruebas muestran fallos de la ontología que de otro modo quedarían ocultos. Los
+                  autores encontraron defectos en varias ontologías y, al corregirlos, obtuvieron una versión mejorada de una de
+                  ellas, Adimen-SUMO. No dice que el sistema arregle cualquier base de conocimiento.
                 </p>
               }
               limitacion={
@@ -466,7 +502,8 @@ export function Caso() {
               validacion={
                 <p>
                   La validación está en la inspección. No se acepta solo el veredicto de la herramienta. La caja blanca importa
-                  porque deja ver el interior de la prueba, no únicamente un sí o un no.
+                  porque deja ver el interior de la prueba, no únicamente un sí o un no. Según los autores, cada prueba da pistas
+                  sobre la naturaleza del defecto.
                 </p>
               }
             />

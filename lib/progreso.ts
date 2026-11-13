@@ -8,8 +8,10 @@ export type Progreso = {
   frase: string;
   decision: "A" | "B" | null;
   justificacion: string;
-  // Respuesta dada en cada ítem de la evaluación: true es «Verdadero».
-  evaluacion: (boolean | null)[];
+  // Opción elegida en cada ítem de la evaluación (su id), o null si falta responder.
+  evaluacion: (string | null)[];
+  // Veces que se ha repetido la evaluación. Decide qué forma del cuestionario toca.
+  intento: number;
   cierre: boolean[];
 };
 
@@ -17,7 +19,8 @@ export const ITEMS_EVALUACION = 8;
 export const MINIMO_ACIERTOS = 7;
 export const MINIMO_PALABRAS = 15;
 
-const CLAVE = "odc-formalizacion:v1";
+// v2: las respuestas de la evaluación pasaron de verdadero/falso a la opción elegida.
+const CLAVE = "odc-formalizacion:v2";
 
 const INICIAL: Progreso = {
   actividades: {},
@@ -26,6 +29,7 @@ const INICIAL: Progreso = {
   decision: null,
   justificacion: "",
   evaluacion: Array(ITEMS_EVALUACION).fill(null),
+  intento: 0,
   cierre: [false, false, false],
 };
 

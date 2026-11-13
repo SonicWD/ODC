@@ -1726,9 +1726,85 @@ button.frase[aria-pressed="true"] {
   background: var(--hondo);
 }
 
+.zona {
+  border-block-start: 2px solid var(--tono, var(--verde));
+}
+
 .zona__nombre {
   margin: 0;
+  color: var(--tono, var(--verde));
   font-size: 1.05rem;
+}
+
+.frase__fuente {
+  display: block;
+  margin-block-start: 0.15rem;
+  color: var(--apagado);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.frase--errada {
+  border-color: var(--rojo);
+  background: var(--rojo-suave);
+}
+
+/* Botones para ubicar la frase elegida sin arrastrar. */
+.destinos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  justify-self: stretch;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-chico);
+  background: var(--hondo);
+}
+
+.destinos__rotulo {
+  flex: 1 1 100%;
+  color: var(--apagado);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.destinos__boton {
+  flex: 1 1 6.5rem;
+  min-block-size: 2.75rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--tono, var(--verde));
+  border-radius: var(--radio-chico);
+  background: none;
+  color: var(--tono, var(--verde));
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.destinos__boton:hover:not(:disabled) {
+  background: var(--superficie-2);
+}
+
+.destinos__boton:disabled {
+  border-color: var(--linea);
+  color: var(--apagado);
+  cursor: not-allowed;
+}
+
+@media (min-width: 40rem) {
+  .banco {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .destinos__rotulo {
+    flex: 0 0 auto;
+    margin-inline-end: 0.25rem;
+  }
 }
 
 .zona__frases {
@@ -1748,6 +1824,186 @@ button.frase[aria-pressed="true"] {
   .zonas {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+}
+
+/* ---------- Caso que acompaña a una pregunta ---------- */
+
+.caso {
+  justify-self: stretch;
+  margin: 0;
+  padding: 0.9rem 1.1rem;
+  border-inline-start: 2px solid var(--ambar);
+  border-radius: 0 var(--radio-chico) var(--radio-chico) 0;
+  background: var(--hondo);
+  color: var(--texto);
+  line-height: 1.55;
+}
+
+.caso__rotulo {
+  display: block;
+  margin-block-end: 0.35rem;
+  color: var(--ambar);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* ---------- Actividad de ordenar ---------- */
+
+.orden {
+  display: grid;
+  gap: 0.5rem;
+  justify-self: stretch;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.orden__paso {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.6rem 0.6rem 0.6rem 0.9rem;
+  border: 1px solid var(--linea-fuerte);
+  border-radius: var(--radio-chico);
+  background: var(--superficie-2);
+  color: var(--tinta);
+}
+
+.orden__paso--ok {
+  border-color: var(--verde-linea);
+}
+
+.orden__paso--mal {
+  border-color: var(--rojo);
+  background: var(--rojo-suave);
+}
+
+.orden__numero {
+  color: var(--verde);
+  font-family: var(--mono);
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.orden__paso--mal .orden__numero {
+  color: var(--rojo);
+}
+
+.orden__texto {
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.orden__nota {
+  display: block;
+  margin-block-start: 0.2rem;
+  color: var(--verde);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.orden__paso--mal .orden__nota {
+  color: var(--rojo);
+}
+
+.orden__botones {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.orden__boton {
+  display: grid;
+  place-items: center;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  padding: 0;
+  border: 1px solid var(--linea-fuerte);
+  border-radius: var(--radio-chico);
+  background: var(--hondo);
+  color: var(--tinta);
+  font: inherit;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.orden__boton:hover:not(:disabled) {
+  border-color: var(--verde);
+  color: var(--verde);
+}
+
+.orden__boton:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* ---------- Serie de situaciones y avance de la evaluación ---------- */
+
+.puntos {
+  display: flex;
+  gap: 0.35rem;
+  margin: 0.9rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.puntos__punto {
+  inline-size: 1.75rem;
+  block-size: 0.3rem;
+  border-radius: 999px;
+  background: var(--linea-fuerte);
+}
+
+.puntos__punto--actual {
+  background: var(--tinta);
+}
+
+.puntos__punto--ok {
+  background: var(--verde);
+}
+
+.puntos__punto--mal {
+  background: var(--rojo);
+}
+
+.serie__tarjeta {
+  margin: 1rem 0 0;
+  padding: 1.4rem 1.3rem;
+  border: 1px solid var(--linea-fuerte);
+  border-radius: var(--radio);
+  background: var(--hondo);
+}
+
+.serie__tarjeta p {
+  margin: 0;
+  color: var(--tinta);
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.serie__tarjeta footer {
+  margin-block-start: 0.7rem;
+  color: var(--apagado);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+}
+
+.serie__botones {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin-block-start: 0.8rem;
+}
+
+.serie__botones .opcion {
+  text-align: center;
 }
 
 /* ---------- Listas «sí cuenta / no cuenta» ---------- */
@@ -1815,6 +2071,75 @@ button.frase[aria-pressed="true"] {
 }
 
 /* ---------- Evaluación ---------- */
+
+.examen__barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem 1rem;
+  justify-self: stretch;
+}
+
+.examen__barra .actividad__cuenta,
+.examen__barra .puntos {
+  margin: 0;
+}
+
+.examen__item {
+  display: grid;
+  gap: 1rem;
+  justify-self: stretch;
+}
+
+/* Opciones con letra: la letra depende de la posición, no de la opción. */
+.opcion:has(.opcion__letra) {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.opcion__letra {
+  flex: none;
+  color: var(--verde);
+  font-family: var(--mono);
+  font-weight: 600;
+}
+
+/* Después de responder, la opción correcta queda a la vista aunque no sea la elegida. */
+.opcion--correcta:disabled {
+  border-color: var(--verde);
+  opacity: 1;
+}
+
+.repaso__criterio {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.etiqueta {
+  padding: 0.1rem 0.5rem;
+  border: 1px solid var(--linea-fuerte);
+  border-radius: 999px;
+  color: var(--texto);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.resultado__repetir {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 1rem;
+}
+
+.resultado__repetir .nota {
+  margin: 0;
+}
 
 .resultado__cabeza {
   display: flex;
@@ -2142,6 +2467,22 @@ button.frase[aria-pressed="true"] {
 
   .retro--mal {
     animation: sacudir 0.35s ease-in-out both;
+  }
+
+  /* Cada situación de la serie y cada pregunta de la evaluación entran como una vista nueva. */
+  .serie__tarjeta,
+  .examen__item {
+    animation: aparecer 0.35s ease-out both;
+  }
+
+  .puntos__punto {
+    transition: background-color 0.25s;
+  }
+
+  .orden__paso {
+    transition:
+      border-color 0.2s,
+      background-color 0.2s;
   }
 
   .resultado__trazo {

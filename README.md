@@ -4,7 +4,13 @@ Objeto Digital de Conocimiento de Wilson Alfonso Díaz Capador para el curso Cie
 
 Son 20 pantallas: portada, resultado y población, menú, siete módulos con su actividad, evaluación de ocho ítems, cierre, referencias y créditos. Es solo front: no tiene servidor ni base de datos. El progreso de cada estudiante se guarda en su propio navegador.
 
-Esta es la versión 2, con el rediseño oscuro y las animaciones. El contenido, las actividades y el cálculo del logro son los mismos de la versión 1 (carpeta `odc-web`). El sistema visual está descrito en `DESIGN.md`.
+Esta es la versión 2, con el rediseño oscuro y las animaciones. El cálculo del logro es el mismo de la versión 1 (carpeta `odc-web`): 7 de 8 y la decisión justificada. Cambian las actividades y la evaluación:
+
+- La evaluación tiene dos cuestionarios paralelos de ocho ítems. Cada ítem parte de un caso y tiene tres opciones. Quien repite la evaluación recibe el otro cuestionario, con las opciones en otro orden.
+- Las actividades 1 a 5 son ordenar pasos, clasificar seis hallazgos, dos preguntas sobre un caso y una serie de seis situaciones. La 6 y la decisión justificada no cambian.
+- Los datos de los casos salen de los resúmenes de los artículos, tal como están en la matriz de la revisión de literatura.
+
+El sistema visual está descrito en `DESIGN.md`.
 
 ## Requisitos
 
@@ -46,7 +52,8 @@ npm run preview  # sirve out/ para revisarlo antes de publicar
 | Referencias en APA 7 | `lib/referencias.ts` |
 | Contenido de los módulos | `components/pantallas/Modulos.tsx` |
 | Enunciados y retroalimentación de las actividades | `components/pantallas/Actividades.tsx` |
-| Ítems de la evaluación | `components/pantallas/Evaluacion.tsx` |
+| Ítems de la evaluación (los dos cuestionarios) | `lib/evaluacion.ts` |
+| Tipos de actividad (ordenar, arrastrar, opciones, serie, frase) | `components/actividades/` |
 | Cierre, referencias y créditos | `components/pantallas/Final.tsx` |
 | Cabecera, avance y barra inferior (Atrás, guía, Seguir) | `components/Marco.tsx` |
 | Encabezado de cada pantalla y transición entre pantallas | `components/Pantalla.tsx` |

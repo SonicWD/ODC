@@ -32,9 +32,9 @@ export const PANTALLAS: DatosPantalla[] = [
   },
   {
     n: 5,
-    titulo: "Actividad 1. Verdadero o falso",
+    titulo: "Actividad 1. Ordena los pasos",
     seccion: "Módulo 1 · Formalizar",
-    voz: "Lee el enunciado y decide antes de mirar la respuesta. Si fallas, no sigas. La retroalimentación te devuelve al tercer paso de la infografía. Si aciertas, pulsa Seguir.",
+    voz: "Aquí hay cuatro pasos desordenados. Cuentan el camino de un resultado, desde que alguien lo afirma hasta que queda aceptado. Usa las flechas de cada paso para subirlo o bajarlo y pulsa Comprobar. Fíjate bien en cuál dejas de último. Si te equivocas, verás qué pasos están fuera de lugar. Si aciertas, pulsa Seguir.",
   },
   {
     n: 6,
@@ -44,9 +44,9 @@ export const PANTALLAS: DatosPantalla[] = [
   },
   {
     n: 7,
-    titulo: "Actividad 2. Arrastrar",
+    titulo: "Actividad 2. Clasifica seis hallazgos",
     seccion: "Módulo 2 · Criterios",
-    voz: "Arrastra cada frase a una columna. No busques la más larga. Mira si habla de un resultado, de un costo o de una comprobación. Si cruzas el costo con la comprobación, vuelve a la pantalla 6 y reintenta. Si aciertas, pulsa Seguir.",
+    voz: "Estos seis hallazgos salen de los artículos. Lleva cada uno a su columna. No te guíes por el autor, porque un mismo artículo puede traer un beneficio y una limitación. Mira si la frase habla de lo que se gana, de lo que cuesta o de cómo se comprueba. Si alguna queda mal, recibes una pista y solo mueves esa. Si aciertas, pulsa Seguir.",
   },
   {
     n: 8,
@@ -56,9 +56,9 @@ export const PANTALLAS: DatosPantalla[] = [
   },
   {
     n: 9,
-    titulo: "Actividad 3. Opción múltiple",
+    titulo: "Actividad 3. ¿Qué se puede citar?",
     seccion: "Módulo 3 · Beneficios",
-    voz: "Elige una opción con las fichas, no con una idea general. Si marcas que el sistema reemplaza a quien investiga, vuelves a la pantalla 8. Si marcas un problema del milenio, recuerda que ese logro no está en estos artículos. La opción que se sostiene es la que habla de pasos comprobables.",
+    voz: "Lee el caso de Sun y Yu antes de mirar las opciones. Elige el beneficio que sí puedes citar con ese artículo, no el que suena más grande. Si marcas que el sistema descubrió algo nuevo o que reemplaza a quien estudia, la retroalimentación te dice por qué no se sostiene y te devuelve a la pantalla 8.",
   },
   {
     n: 10,
@@ -68,9 +68,9 @@ export const PANTALLAS: DatosPantalla[] = [
   },
   {
     n: 11,
-    titulo: "Actividad 4. Opción múltiple",
+    titulo: "Actividad 4. ¿Cuál es el límite?",
     seccion: "Módulo 4 · Limitaciones",
-    voz: "Responde con los casos, no con una opinión general. Si dices que la literatura no existe, vuelves a la pantalla 10. Si hablas de redes sociales, ese no es el tema. La opción que analiza la limitación es la que habla de formación, herramienta y supervisión.",
+    voz: "Lee el caso de Kaufmann y colegas. Ellos mismos advierten que la verificación puede contener errores. Elige qué límite reconoce esa advertencia. Responde con el caso, no con una opinión general. Si dices que la literatura no existe o que la verificación no sirve, vuelves a la pantalla 10.",
   },
   {
     n: 12,
@@ -80,9 +80,9 @@ export const PANTALLAS: DatosPantalla[] = [
   },
   {
     n: 13,
-    titulo: "Actividad 5. Verdadero o falso",
+    titulo: "Actividad 5. ¿Cuenta como validación?",
     seccion: "Módulo 5 · Validación",
-    voz: "Lee el enunciado y decide antes de mirar la respuesta. La palabra seguridad suena a validación, y en estos casos no lo es. Si fallas, vuelve a la pantalla 12. Si aciertas, pulsa Seguir.",
+    voz: "Vas a ver seis situaciones, una por una. En cada una decide si cuenta o no cuenta como validación, y lee la razón antes de pasar a la siguiente. Un tono seguro o un texto largo suenan a validación, y no lo son. Para resolver la actividad necesitas las seis. Si fallas alguna, puedes repetir la serie.",
   },
   {
     n: 14,
@@ -106,7 +106,7 @@ export const PANTALLAS: DatosPantalla[] = [
     n: 17,
     titulo: "Evaluación",
     seccion: "Evaluación final",
-    voz: "Esta es la evaluación. Son ocho preguntas, una por vista. El logro es siete de ocho, junto con la justificación que escribiste en el módulo de apropiación. Responde y lee la razón antes de pasar a la siguiente. Al terminar ves el puntaje.",
+    voz: "Esta es la evaluación. Son ocho preguntas, una por vista, y cada una parte de un caso. Lee el caso, elige una opción y lee la razón antes de pasar a la siguiente. El logro es siete de ocho, junto con la justificación que escribiste en el módulo de apropiación. Al terminar ves el puntaje. Si la repites, los casos y las preguntas cambian.",
   },
   {
     n: 18,

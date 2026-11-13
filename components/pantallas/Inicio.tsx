@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { Fragment, type CSSProperties, type PointerEvent } from "react";
 import { BotonEscuchar } from "@/components/Guia";
@@ -22,20 +23,21 @@ export function Portada() {
     <div className="portada" onPointerMove={seguirPuntero}>
       <div className="portada__texto">
         <div className="portada__marcas">
-          <img
+          <Image
             className="portada__logo"
             src={conBase("/logos/udec-horizontal.png")}
             alt="Universidad de Cundinamarca"
             width={280}
             height={130}
+            priority
           />
-          <img
+          <Image
             className="portada__escudo"
             src={conBase("/logos/udec-escudo.png")}
             alt=""
             width={72}
             height={108}
-            aria-hidden="true"
+            aria-hidden
           />
         </div>
         <p className="seccion">Objeto Digital de Conocimiento · Universidad de Cundinamarca</p>

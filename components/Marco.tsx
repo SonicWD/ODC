@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
@@ -31,7 +32,7 @@ export function Marco({ children }: { children: ReactNode }) {
       <header className="cabecera" style={{ viewTransitionName: "cabecera" }}>
         <div className="cabecera__fila">
           <Link className="cabecera__marca" href={ruta(PORTADA)} transitionTypes={["nav-back"]}>
-            <img
+            <Image
               className="cabecera__escudo"
               src={conBase("/logos/udec-escudo.png")}
               alt=""

@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
   output: "export",
   trailingSlash: true,
   basePath: base || undefined,
+  // Con export estático no hay optimizador de imágenes en servidor.
+  images: { unoptimized: true },
 };
 
 export default nextConfig;

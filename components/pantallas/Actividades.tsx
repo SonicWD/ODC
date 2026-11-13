@@ -34,9 +34,9 @@ export function Actividad2() {
       repaso="criterios"
       enunciado="Estos seis hallazgos salen de los artículos. Lleva cada uno a su columna."
       zonas={[
-        { clave: "beneficio", nombre: "Beneficio" },
-        { clave: "limitacion", nombre: "Limitación" },
-        { clave: "validacion", nombre: "Validación" },
+        { clave: "beneficio", nombre: "Beneficio", ayuda: "Lo que se gana con el método" },
+        { clave: "limitacion", nombre: "Limitación", ayuda: "Lo que cuesta o no cubre" },
+        { clave: "validacion", nombre: "Validación", ayuda: "Cómo se comprueba el resultado" },
       ]}
       frases={[
         {

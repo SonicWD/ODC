@@ -6,7 +6,12 @@ import { Repaso } from "@/components/Repaso";
 import { RESORTE } from "@/components/Movimiento";
 import { marcarActividad, useProgreso } from "@/lib/progreso";
 
-export type Zona = { clave: string; nombre: string };
+export type Zona = {
+  clave: string;
+  nombre: string;
+  /** Qué significa la columna; va visible (no solo en hover). */
+  ayuda: string;
+};
 export type FraseSuelta = {
   id: string;
   texto: string;
@@ -86,7 +91,17 @@ export function Arrastrar({
       <p className="actividad__enunciado">{enunciado}</p>
       <p className="actividad__ayuda">
         Arrastra cada frase a su columna. También puedes pulsarla y elegir la columna con los botones.
+        Mira si habla de lo que se gana, de lo que cuesta o de cómo se comprueba.
       </p>
+
+      <ul className="leyenda-columnas" aria-label="Significado de cada columna">
+        {zonas.map((zona) => (
+          <li key={zona.clave} className={`leyenda-columnas__item columna--${zona.clave}`}>
+            <strong>{zona.nombre}</strong>
+            <span>{zona.ayuda}</span>
+          </li>
+        ))}
+      </ul>
 
       <ul ref={banco} className="banco" role="list" aria-label="Frases por ubicar">
         <AnimatePresence initial={false}>
@@ -131,9 +146,11 @@ export function Arrastrar({
               type="button"
               className={`destinos__boton columna--${zona.clave}`}
               disabled={!tomada}
+              aria-label={`${zona.nombre}: ${zona.ayuda}`}
               onClick={() => ponerTomada(zona.clave)}
             >
-              {zona.nombre}
+              <span className="destinos__nombre">{zona.nombre}</span>
+              <span className="destinos__ayuda">{zona.ayuda}</span>
             </button>
           ))}
         </div>
@@ -151,6 +168,7 @@ export function Arrastrar({
             }}
           >
             <h2 className="zona__nombre">{zona.nombre}</h2>
+            <p className="zona__ayuda">{zona.ayuda}</p>
             <ul className="zona__frases" role="list">
               <AnimatePresence initial={false}>
                 {frases

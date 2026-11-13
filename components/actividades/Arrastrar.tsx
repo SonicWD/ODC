@@ -94,15 +94,6 @@ export function Arrastrar({
         Mira si habla de lo que se gana, de lo que cuesta o de cómo se comprueba.
       </p>
 
-      <ul className="leyenda-columnas" aria-label="Significado de cada columna">
-        {zonas.map((zona) => (
-          <li key={zona.clave} className={`leyenda-columnas__item columna--${zona.clave}`}>
-            <strong>{zona.nombre}</strong>
-            <span>{zona.ayuda}</span>
-          </li>
-        ))}
-      </ul>
-
       <ul ref={banco} className="banco" role="list" aria-label="Frases por ubicar">
         <AnimatePresence initial={false}>
           {sueltas.map((frase) => (
@@ -147,16 +138,16 @@ export function Arrastrar({
               className={`destinos__boton columna--${zona.clave}`}
               disabled={!tomada}
               aria-label={`${zona.nombre}: ${zona.ayuda}`}
+              title={zona.ayuda}
               onClick={() => ponerTomada(zona.clave)}
             >
-              <span className="destinos__nombre">{zona.nombre}</span>
-              <span className="destinos__ayuda">{zona.ayuda}</span>
+              {zona.nombre}
             </button>
           ))}
         </div>
       )}
 
-      <div className="zonas">
+      <div className="zonas" aria-label="Columnas">
         {zonas.map((zona) => (
           <div
             key={zona.clave}

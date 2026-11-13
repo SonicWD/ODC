@@ -1810,42 +1810,6 @@ button.frase[aria-pressed="true"] {
   line-height: 1.35;
 }
 
-/* Significado de cada columna, siempre visible (sin depender del hover). */
-.leyenda-columnas {
-  display: grid;
-  gap: 0.5rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  justify-self: stretch;
-}
-
-.leyenda-columnas__item {
-  display: grid;
-  gap: 0.15rem;
-  padding: 0.55rem 0.7rem;
-  border: 1px solid color-mix(in srgb, var(--tono, var(--verde)) 45%, var(--linea));
-  border-radius: var(--radio-chico);
-  background: color-mix(in srgb, var(--tono, var(--verde)) 8%, transparent);
-}
-
-.leyenda-columnas__item strong {
-  color: var(--tono, var(--verde));
-  font-size: 0.95rem;
-}
-
-.leyenda-columnas__item span {
-  color: var(--apagado);
-  font-size: 0.85rem;
-  line-height: 1.35;
-}
-
-@media (min-width: 40rem) {
-  .leyenda-columnas {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
 .frase__fuente {
   display: block;
   margin-block-start: 0.15rem;
@@ -1884,32 +1848,16 @@ button.frase[aria-pressed="true"] {
 }
 
 .destinos__boton {
-  display: grid;
-  gap: 0.15rem;
-  flex: 1 1 7.5rem;
+  flex: 1 1 6.5rem;
   min-block-size: 2.75rem;
-  padding: 0.45rem 0.8rem;
+  padding: 0.4rem 0.8rem;
   border: 1px solid var(--tono, var(--verde));
   border-radius: var(--radio-chico);
   background: none;
   color: var(--tono, var(--verde));
   font: inherit;
-  text-align: start;
-}
-
-.destinos__nombre {
-  font-weight: 650;
-}
-
-.destinos__ayuda {
-  color: var(--apagado);
-  font-size: 0.78rem;
-  line-height: 1.3;
-  font-weight: 400;
-}
-
-.destinos__boton:disabled .destinos__ayuda {
-  color: inherit;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .destinos__boton:hover:not(:disabled) {

@@ -7,7 +7,7 @@ import { contarPalabras } from "@/lib/progreso";
 import { conBase } from "@/lib/sitio";
 import { detener, detenerSiEs, hablar, pausar, prepararVoces, reanudar, useVoz } from "@/lib/voz";
 
-// Botón pequeño para oír un texto corto (tarjetas de la pantalla 2).
+// Botón pequeño para oír un texto corto (tarjetas de resultado y población).
 export function BotonEscuchar({ id, texto, etiqueta }: { id: string; texto: string; etiqueta: string }) {
   const voz = useVoz();
   const activa = voz.id === id && voz.fase !== "inactiva";
@@ -36,8 +36,8 @@ const ACCION = {
 } as const;
 
 // Reproductor del guía. Vive en la barra inferior, entre Atrás y Seguir.
-export function Guia({ n, texto, audio }: { n: number; texto: string; audio?: string }) {
-  const id = `guia-${n}`;
+export function Guia({ id: pantalla, texto, audio }: { id: string; texto: string; audio?: string }) {
+  const id = `guia-${pantalla}`;
   const voz = useVoz();
   const mia = voz.id === id;
   const fase = mia ? voz.fase : "inactiva";

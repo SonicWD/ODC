@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { MENU, ruta } from "@/lib/pantallas";
+import { MENU, indice, ruta } from "@/lib/pantallas";
 import { useProgreso } from "@/lib/progreso";
 
-export function MenuLista({ actual, nivel }: { actual: number; nivel: 2 | 3 }) {
+export function MenuLista({ actual, nivel }: { actual: string; nivel: 2 | 3 }) {
   const progreso = useProgreso();
   const Rotulo = nivel === 2 ? "h2" : "h3";
+  const aqui = indice(actual);
 
   return (
     <nav className="menu" aria-label="Secciones del recurso">
@@ -17,15 +18,15 @@ export function MenuLista({ actual, nivel }: { actual: number; nivel: 2 | 3 }) {
             {grupo.entradas.map((entrada) => {
               const resuelta = entrada.actividad ? Boolean(progreso.actividades[entrada.actividad]) : false;
               return (
-                <li key={entrada.n}>
+                <li key={entrada.id}>
                   <Link
-                    href={ruta(entrada.n)}
+                    href={ruta(entrada.id)}
                     className={resuelta ? "menu__enlace menu__enlace--resuelta" : "menu__enlace"}
-                    aria-current={actual === entrada.n ? "page" : undefined}
-                    transitionTypes={[entrada.n >= actual ? "nav-forward" : "nav-back"]}
+                    aria-current={actual === entrada.id ? "page" : undefined}
+                    transitionTypes={[indice(entrada.id) >= aqui ? "nav-forward" : "nav-back"]}
                   >
-                    <span className="menu__numero" aria-hidden="true">
-                      {String(entrada.n).padStart(2, "0")}
+                    <span className="menu__marca" aria-hidden="true">
+                      {resuelta ? "✓" : ""}
                     </span>
                     <span className="menu__nombre">{entrada.etiqueta}</span>
                     {entrada.actividad && (

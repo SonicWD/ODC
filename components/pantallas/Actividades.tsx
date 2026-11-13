@@ -8,13 +8,11 @@ import { Serie } from "@/components/actividades/Serie";
 
 // Los datos de cada caso salen de los resúmenes de los artículos, tal como están en la matriz de la revisión.
 
-/* ---------- Pantalla 5 · Ordenar el camino de un resultado ---------- */
-
 export function Actividad1() {
   return (
     <Ordenar
       clave="a1"
-      repaso={4}
+      repaso="formalizar"
       enunciado="Ordena el camino de un resultado, desde que alguien lo afirma hasta que queda aceptado."
       pasos={[
         { id: "parrafo", texto: "Alguien afirma el resultado en un párrafo convincente." },
@@ -24,18 +22,16 @@ export function Actividad1() {
       ]}
       inicial={["asistente", "parrafo", "revision", "formal"]}
       retroBien="Ese es el orden. Lo que entrega el sistema no cierra el camino: el resultado queda aceptado cuando otra persona puede recorrer los pasos."
-      retroMal="Hay pasos fuera de lugar. Fíjate en cuál pusiste de último: una prueba que nadie revisa sigue siendo una propuesta. Mueve los pasos y vuelve a comprobar, o repasa la infografía de la pantalla 4."
+      retroMal="Hay pasos fuera de lugar. Fíjate en cuál pusiste de último: una prueba que nadie revisa sigue siendo una propuesta. Mueve los pasos y vuelve a comprobar, o repasa la infografía de Formalizar."
     />
   );
 }
-
-/* ---------- Pantalla 7 · Seis hallazgos, tres columnas ---------- */
 
 export function Actividad2() {
   return (
     <Arrastrar
       clave="a2"
-      repaso={6}
+      repaso="criterios"
       enunciado="Estos seis hallazgos salen de los artículos. Lleva cada uno a su columna."
       zonas={[
         { clave: "beneficio", nombre: "Beneficio" },
@@ -91,13 +87,11 @@ export function Actividad2() {
   );
 }
 
-/* ---------- Pantalla 9 · Qué beneficio se puede citar ---------- */
-
 export function Actividad3() {
   return (
     <Opciones
       clave="a3"
-      repaso={8}
+      repaso="beneficios"
       caso="Sun y Yu (2020) escribieron en Coq una teoría de conjuntos: ocho axiomas, un esquema de axiomas, 62 definiciones y 148 teoremas o corolarios, con sus pruebas dentro del asistente."
       enunciado="¿Qué beneficio puedes citar con ese artículo?"
       opciones={[
@@ -106,7 +100,7 @@ export function Actividad3() {
           etiqueta: "A. Coq descubrió por su cuenta teoremas de conjuntos que no se conocían.",
           correcta: false,
           retro:
-            "El artículo formaliza teoremas conocidos, como el de Schröder-Bernstein. El beneficio es que quedan comprobables, no que sean nuevos. Vuelve a la ficha de Sun y Yu en la pantalla 8.",
+            "El artículo formaliza teoremas conocidos, como el de Schröder-Bernstein. El beneficio es que quedan comprobables, no que sean nuevos. Vuelve a la ficha de Sun y Yu en Beneficios.",
         },
         {
           id: "b",
@@ -120,20 +114,18 @@ export function Actividad3() {
           etiqueta: "C. Con ese archivo ya no hace falta que una persona entienda la teoría.",
           correcta: false,
           retro:
-            "El archivo deja los pasos para que alguien los revise. No reemplaza a quien los lee. Vuelve a la pantalla 8 y mira qué quedó revisable.",
+            "El archivo deja los pasos para que alguien los revise. No reemplaza a quien los lee. Vuelve a Beneficios y mira qué quedó revisable.",
         },
       ]}
     />
   );
 }
 
-/* ---------- Pantalla 11 · Cuál es el límite ---------- */
-
 export function Actividad4() {
   return (
     <Opciones
       clave="a4"
-      repaso={10}
+      repaso="limitaciones"
       caso="Kaufmann y colegas (2024) parten de una advertencia: el propio proceso de verificación puede contener errores. Por eso sus herramientas generan certificados y otros programas los revisan."
       enunciado="¿Qué límite reconoce ese punto de partida?"
       opciones={[
@@ -142,14 +134,14 @@ export function Actividad4() {
           etiqueta: "A. Que la verificación formal no sirve en un posgrado, porque la herramienta también se equivoca.",
           correcta: false,
           retro:
-            "El artículo no la descarta. Agrega certificados y comprobadores para poder confiar en el resultado. Vuelve a la pantalla 10.",
+            "El artículo no la descarta. Agrega certificados y comprobadores para poder confiar en el resultado. Vuelve a Limitaciones.",
         },
         {
           id: "b",
           etiqueta: "B. Que estos sistemas todavía no aparecen en la literatura.",
           correcta: false,
           retro:
-            "Es falso. Kaufmann (2022), Benzmüller y Scott (2020) y este mismo artículo están publicados. El límite es otro. Vuelve a la pantalla 10.",
+            "Es falso. Kaufmann (2022), Benzmüller y Scott (2020) y este mismo artículo están publicados. El límite es otro. Vuelve a Limitaciones.",
         },
         {
           id: "c",
@@ -163,13 +155,11 @@ export function Actividad4() {
   );
 }
 
-/* ---------- Pantalla 13 · Cuenta o no cuenta como validación ---------- */
-
 export function Actividad5() {
   return (
     <Serie
       clave="a5"
-      repaso={12}
+      repaso="validacion"
       enunciado="¿Cuenta como validación?"
       si="Sí cuenta"
       no="No cuenta"
@@ -213,13 +203,11 @@ export function Actividad5() {
   );
 }
 
-/* ---------- Pantalla 15 · Una frase sobre el caso ---------- */
-
 export function Actividad6() {
   return (
     <Frase
       clave="a6"
-      repaso={14}
+      repaso="caso"
       pregunta="¿Qué revisarías antes de usar el resultado de Álvez y colegas (2019) en un trabajo de posgrado?"
     />
   );

@@ -1,13 +1,98 @@
 "use client";
 
-import Link from "next/link";
+import { Reorder, useDragControls } from "motion/react";
 import { useEffect, useId, useRef, useState } from "react";
-import { ruta } from "@/lib/pantallas";
+import { Repaso } from "@/components/Repaso";
 import { marcarActividad, useProgreso } from "@/lib/progreso";
 
 export type Paso = { id: string; texto: string };
 
-// Ordenar una secuencia con los botones Subir y Bajar. Sirve igual con ratón, teclado o pantalla táctil.
+type Marca = "ok" | "mal" | null;
+
+// Un paso de la lista. Se arrastra solo desde la agarradera, para que el resto de la tarjeta
+// deje desplazar la página con el dedo. Las flechas hacen lo mismo con teclado.
+function PasoOrdenable({
+  paso,
+  posicion,
+  total,
+  marca,
+  fijo,
+  base,
+  alMover,
+  alSoltar,
+}: {
+  paso: Paso;
+  posicion: number;
+  total: number;
+  marca: Marca;
+  fijo: boolean;
+  base: string;
+  alMover: (salto: -1 | 1) => void;
+  alSoltar: () => void;
+}) {
+  const controles = useDragControls();
+  return (
+    <Reorder.Item
+      as="li"
+      value={paso.id}
+      dragListener={false}
+      dragControls={controles}
+      className={marca ? `orden__paso orden__paso--${marca}` : "orden__paso"}
+      whileDrag={{ scale: 1.02, boxShadow: "0 14px 34px rgb(0 0 0 / 0.5)", zIndex: 2 }}
+      onDragEnd={alSoltar}
+    >
+      {/* La agarradera es solo para puntero: con teclado y lector de pantalla se usan las flechas. */}
+      <span
+        className="orden__agarre"
+        aria-hidden="true"
+        onPointerDown={(evento) => {
+          if (!fijo) controles.start(evento);
+        }}
+      >
+        <svg viewBox="0 0 16 24">
+          <path
+            d="M5 5h.01M11 5h.01M5 12h.01M11 12h.01M5 19h.01M11 19h.01"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.6"
+            strokeLinecap="round"
+          />
+        </svg>
+      </span>
+      <span className="orden__numero" aria-hidden="true">
+        {posicion + 1}
+      </span>
+      <span className="orden__texto">
+        {paso.texto}
+        {marca && <span className="orden__nota">{marca === "ok" ? "En su lugar" : "Fuera de lugar"}</span>}
+      </span>
+      <span className="orden__botones">
+        <button
+          type="button"
+          id={`${base}-${paso.id}-subir`}
+          className="orden__boton"
+          disabled={posicion === 0 || fijo}
+          onClick={() => alMover(-1)}
+        >
+          <span aria-hidden="true">↑</span>
+          <span className="solo-lector">Subir: {paso.texto}</span>
+        </button>
+        <button
+          type="button"
+          id={`${base}-${paso.id}-bajar`}
+          className="orden__boton"
+          disabled={posicion === total - 1 || fijo}
+          onClick={() => alMover(1)}
+        >
+          <span aria-hidden="true">↓</span>
+          <span className="solo-lector">Bajar: {paso.texto}</span>
+        </button>
+      </span>
+    </Reorder.Item>
+  );
+}
+
+// Ordenar una secuencia arrastrando o con las flechas. Sirve igual con ratón, dedo o teclado.
 export function Ordenar({
   clave,
   repaso,
@@ -18,7 +103,8 @@ export function Ordenar({
   retroMal,
 }: {
   clave: string;
-  repaso: number;
+  /** Pantalla a la que se envía a repasar. */
+  repaso: string;
   enunciado: string;
   /** Los pasos, en el orden correcto. */
   pasos: Paso[];
@@ -32,11 +118,12 @@ export function Ordenar({
   const [orden, setOrden] = useState(inicial);
   const [comprobado, setComprobado] = useState(false);
   const [aviso, setAviso] = useState("");
-  // Botón que debe recuperar el foco después de mover un paso.
+  // Botón que debe recuperar el foco después de mover un paso con las flechas.
   const foco = useRef<string | null>(null);
 
   const enSuLugar = orden.map((id, i) => id === pasos[i].id);
   const bien = enSuLugar.every(Boolean);
+  const resuelto = comprobado && bien;
 
   // Al mover un paso el navegador puede soltar el foco del botón; aquí se le devuelve.
   useEffect(() => {
@@ -45,6 +132,11 @@ export function Ordenar({
     if (boton instanceof HTMLButtonElement && !boton.disabled) boton.focus();
     foco.current = null;
   }, [orden]);
+
+  function anunciar(id: string, lista: string[]) {
+    const texto = pasos.find((p) => p.id === id)?.texto;
+    setAviso(`«${texto}» quedó en la posición ${lista.indexOf(id) + 1} de ${lista.length}.`);
+  }
 
   function mover(i: number, salto: -1 | 1) {
     const j = i + salto;
@@ -57,7 +149,12 @@ export function Ordenar({
     foco.current = `${base}-${orden[i]}-${sentido}`;
     setOrden(nuevo);
     setComprobado(false);
-    setAviso(`«${pasos.find((p) => p.id === orden[i])?.texto}» quedó en la posición ${j + 1} de ${orden.length}.`);
+    anunciar(orden[i], nuevo);
+  }
+
+  function reordenar(nuevo: string[]) {
+    setOrden(nuevo);
+    setComprobado(false);
   }
 
   function comprobar() {
@@ -71,53 +168,29 @@ export function Ordenar({
         <p className="actividad__hecha">Ya resolviste esta actividad. Puedes repetirla.</p>
       )}
       <p className="actividad__enunciado">{enunciado}</p>
-      <p className="actividad__ayuda">Usa las flechas para subir o bajar cada paso. Arriba va lo que ocurre primero.</p>
+      <p className="actividad__ayuda">
+        Arrastra cada paso por su agarradera o usa las flechas. Arriba va lo que ocurre primero.
+      </p>
 
-      <ol className="orden">
+      <Reorder.Group as="ol" axis="y" values={orden} onReorder={reordenar} className="orden">
         {orden.map((id, i) => {
           const paso = pasos.find((p) => p.id === id);
           if (!paso) return null;
-          const marcado = comprobado && !bien;
           return (
-            <li
+            <PasoOrdenable
               key={id}
-              className={
-                marcado ? (enSuLugar[i] ? "orden__paso orden__paso--ok" : "orden__paso orden__paso--mal") : "orden__paso"
-              }
-            >
-              <span className="orden__numero" aria-hidden="true">
-                {i + 1}
-              </span>
-              <span className="orden__texto">
-                {paso.texto}
-                {marcado && <span className="orden__nota">{enSuLugar[i] ? "En su lugar" : "Fuera de lugar"}</span>}
-              </span>
-              <span className="orden__botones">
-                <button
-                  type="button"
-                  id={`${base}-${id}-subir`}
-                  className="orden__boton"
-                  disabled={i === 0 || (comprobado && bien)}
-                  onClick={() => mover(i, -1)}
-                >
-                  <span aria-hidden="true">↑</span>
-                  <span className="solo-lector">Subir: {paso.texto}</span>
-                </button>
-                <button
-                  type="button"
-                  id={`${base}-${id}-bajar`}
-                  className="orden__boton"
-                  disabled={i === orden.length - 1 || (comprobado && bien)}
-                  onClick={() => mover(i, 1)}
-                >
-                  <span aria-hidden="true">↓</span>
-                  <span className="solo-lector">Bajar: {paso.texto}</span>
-                </button>
-              </span>
-            </li>
+              paso={paso}
+              posicion={i}
+              total={orden.length}
+              marca={comprobado && !bien ? (enSuLugar[i] ? "ok" : "mal") : null}
+              fijo={resuelto}
+              base={base}
+              alMover={(salto) => mover(i, salto)}
+              alSoltar={() => anunciar(id, orden)}
+            />
           );
         })}
-      </ol>
+      </Reorder.Group>
       <p className="solo-lector" aria-live="polite">
         {aviso}
       </p>
@@ -137,9 +210,7 @@ export function Ordenar({
               <p>Puedes seguir.</p>
             ) : (
               <div className="retro__acciones">
-                <Link className="boton boton--suave" href={ruta(repaso)}>
-                  Volver a la pantalla {repaso}
-                </Link>
+                <Repaso id={repaso} boton />
               </div>
             )}
           </div>

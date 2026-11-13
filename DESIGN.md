@@ -39,17 +39,21 @@ El verde es el único color de acento. Ámbar, azul y rojo solo aparecen con un 
 
 ## Movimiento
 
+Se usan dos capas: **View Transitions** del navegador para cambiar de pantalla y **Motion** (`motion/react`) para interacciones dentro de la pantalla. El contenedor `Movimiento` aplica `reducedMotion="user"`.
+
 | Dónde | Qué hace |
 | --- | --- |
-| Cambio de pantalla | Seguir desliza el contenido hacia la izquierda y Atrás hacia la derecha. La cabecera y la barra inferior no se mueven. |
-| Portada | El título entra palabra por palabra. La prueba aparece línea por línea y cada paso recibe su marca. Termina sola en unos cuatro segundos y tiene botón Repetir. |
-| Contenido | Los bloques aparecen al entrar en la ventana. Las fichas se despliegan. |
-| Actividades | El acierto rebota y el fallo se sacude una vez. |
-| Evaluación | El anillo del puntaje se traza y, con el logro cumplido, cae el sello Q.E.D. |
-| Guía con voz | Las barras de sonido y el avatar se mueven solo mientras habla. |
+| Cambio de pantalla | Seguir desliza hacia adelante y Atrás hacia atrás. Cabecera y barra inferior se quedan quietas. |
+| Avance | Una barra continua crece con Motion según la posición en el recorrido (sin contar pantallas fijas). |
+| Portada | El título entra palabra por palabra. La prueba aparece línea por línea. |
+| Ordenar | Arrastre por la agarradera (`Reorder`) o flechas con teclado. |
+| Serie / laboratorio | Entrada de tarjeta; en la serie también se puede deslizar a izquierda/derecha. |
+| Clasificar | Las frases se reacomodan con layout animado al pasar a una columna. |
+| Evaluación | Cada pregunta entra y sale; el anillo del puntaje se traza; con el logro cae Q.E.D. |
+| Guía con voz | Las barras y el avatar se mueven solo mientras habla. |
 
 Reglas:
 
-1. Todo el movimiento está dentro de `@media (prefers-reduced-motion: no-preference)`. Si el estudiante pide reducir el movimiento, no se anima nada y cada elemento queda en su estado final.
-2. Ninguna animación automática dura más de cinco segundos. La única que se repite es la del guía, que se detiene con Pausar o Detener.
-3. Lo que el navegador no admita se omite sin afectar el contenido: aparición al desplazar, despliegue de fichas y transiciones de vista.
+1. Si el sistema pide menos movimiento, Motion reduce a cambios de opacidad y el CSS no aplica desplazamientos.
+2. Ninguna animación automática dura más de cinco segundos. La del guía se detiene con Pausar o Detener.
+3. Toda actividad arrastrable tiene alternativa con botones o teclado.

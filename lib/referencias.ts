@@ -42,6 +42,15 @@ export const REFERENCIAS: Referencia[] = [
     url: "https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es",
   },
   {
+    id: "hartung2025",
+    partes: [
+      "Hartung, T. (2025). AI, agentic models and lab automation for scientific discovery — the beginning of scAInce. ",
+      { i: "Frontiers in Artificial Intelligence, 8" },
+      ", Artículo 1649155.",
+    ],
+    url: doi("10.3389/frai.2025.1649155"),
+  },
+  {
     id: "harvard2021",
     partes: [
       "Harvard CMSA. (2021, 1 de abril). ",

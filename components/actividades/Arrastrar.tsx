@@ -1,8 +1,9 @@
 "use client";
 
-import Link from "next/link";
+import { AnimatePresence, motion } from "motion/react";
 import { useRef, useState } from "react";
-import { ruta } from "@/lib/pantallas";
+import { Repaso } from "@/components/Repaso";
+import { RESORTE } from "@/components/Movimiento";
 import { marcarActividad, useProgreso } from "@/lib/progreso";
 
 export type Zona = { clave: string; nombre: string };
@@ -27,7 +28,7 @@ export function Arrastrar({
   retroBien,
 }: {
   clave: string;
-  repaso: number;
+  repaso: string;
   enunciado: string;
   zonas: Zona[];
   frases: FraseSuelta[];
@@ -88,27 +89,36 @@ export function Arrastrar({
       </p>
 
       <ul ref={banco} className="banco" role="list" aria-label="Frases por ubicar">
-        {sueltas.map((frase) => (
-          <li key={frase.id}>
-            <button
-              type="button"
-              className="frase"
-              draggable
-              aria-pressed={tomada === frase.id}
-              onClick={() => setTomada(tomada === frase.id ? null : frase.id)}
-              onDragStart={(evento) => {
-                evento.dataTransfer.setData("text/plain", frase.id);
-                evento.dataTransfer.effectAllowed = "move";
-              }}
+        <AnimatePresence initial={false}>
+          {sueltas.map((frase) => (
+            <motion.li
+              key={frase.id}
+              layout
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.96 }}
+              transition={RESORTE}
             >
-              <span className="frase__letra">{frase.id}</span>
-              <span>
-                {frase.texto}
-                {frase.fuente && <span className="frase__fuente"> {frase.fuente}</span>}
-              </span>
-            </button>
-          </li>
-        ))}
+              <button
+                type="button"
+                className="frase"
+                draggable
+                aria-pressed={tomada === frase.id}
+                onClick={() => setTomada(tomada === frase.id ? null : frase.id)}
+                onDragStart={(evento) => {
+                  evento.dataTransfer.setData("text/plain", frase.id);
+                  evento.dataTransfer.effectAllowed = "move";
+                }}
+              >
+                <span className="frase__letra">{frase.id}</span>
+                <span>
+                  {frase.texto}
+                  {frase.fuente && <span className="frase__fuente"> {frase.fuente}</span>}
+                </span>
+              </button>
+            </motion.li>
+          ))}
+        </AnimatePresence>
         {completo && <li className="banco__vacio">Todas las frases están ubicadas.</li>}
       </ul>
 
@@ -142,23 +152,33 @@ export function Arrastrar({
           >
             <h2 className="zona__nombre">{zona.nombre}</h2>
             <ul className="zona__frases" role="list">
-              {frases
-                .filter((f) => zonaDe(f.id) === zona.clave)
-                .map((frase) => {
-                  const errada = comprobado && frase.destino !== zona.clave;
-                  return (
-                    <li key={frase.id} className={errada ? "frase frase--puesta frase--errada" : "frase frase--puesta"}>
-                      <span>
-                        <span className="frase__letra">{frase.id}</span> {frase.texto}
-                      </span>
-                      {!comprobado && (
-                        <button type="button" className="frase__quitar" onClick={() => quitar(frase.id)}>
-                          Quitar<span className="solo-lector"> la frase {frase.id}</span>
-                        </button>
-                      )}
-                    </li>
-                  );
-                })}
+              <AnimatePresence initial={false}>
+                {frases
+                  .filter((f) => zonaDe(f.id) === zona.clave)
+                  .map((frase) => {
+                    const errada = comprobado && frase.destino !== zona.clave;
+                    return (
+                      <motion.li
+                        key={frase.id}
+                        layout
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0 }}
+                        transition={RESORTE}
+                        className={errada ? "frase frase--puesta frase--errada" : "frase frase--puesta"}
+                      >
+                        <span>
+                          <span className="frase__letra">{frase.id}</span> {frase.texto}
+                        </span>
+                        {!comprobado && (
+                          <button type="button" className="frase__quitar" onClick={() => quitar(frase.id)}>
+                            Quitar<span className="solo-lector"> la frase {frase.id}</span>
+                          </button>
+                        )}
+                      </motion.li>
+                    );
+                  })}
+              </AnimatePresence>
             </ul>
           </div>
         ))}
@@ -171,38 +191,45 @@ export function Arrastrar({
       )}
 
       <div role="status">
-        {comprobado && (
-          <div className={bien ? "retro retro--bien" : "retro retro--mal"}>
-            <p className="retro__titulo">
-              {bien ? "Correcto" : `${frases.length - erradas.length} de ${frases.length} en su columna`}
-            </p>
-            {bien ? (
-              <>
-                <p>{retroBien}</p>
-                <p>Puedes seguir.</p>
-              </>
-            ) : (
-              <>
-                <p>Estas frases van en otra columna. Lee la pista y muévelas:</p>
-                <ul>
-                  {erradas.map((frase) => (
-                    <li key={frase.id}>
-                      <strong>{frase.id}.</strong> {frase.pista}
-                    </li>
-                  ))}
-                </ul>
-                <div className="retro__acciones">
-                  <button type="button" className="boton" onClick={reintentar}>
-                    Mover las que faltan
-                  </button>
-                  <Link className="boton boton--suave" href={ruta(repaso)}>
-                    Volver a la pantalla {repaso}
-                  </Link>
-                </div>
-              </>
-            )}
-          </div>
-        )}
+        <AnimatePresence>
+          {comprobado && (
+            <motion.div
+              key={bien ? "bien" : "mal"}
+              className={bien ? "retro retro--bien" : "retro retro--mal"}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={RESORTE}
+            >
+              <p className="retro__titulo">
+                {bien ? "Correcto" : `${frases.length - erradas.length} de ${frases.length} en su columna`}
+              </p>
+              {bien ? (
+                <>
+                  <p>{retroBien}</p>
+                  <p>Puedes seguir.</p>
+                </>
+              ) : (
+                <>
+                  <p>Estas frases van en otra columna. Lee la pista y muévelas:</p>
+                  <ul>
+                    {erradas.map((frase) => (
+                      <li key={frase.id}>
+                        <strong>{frase.id}.</strong> {frase.pista}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="retro__acciones">
+                    <button type="button" className="boton" onClick={reintentar}>
+                      Mover las que faltan
+                    </button>
+                    <Repaso id={repaso} boton />
+                  </div>
+                </>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );

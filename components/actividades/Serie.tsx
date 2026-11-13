@@ -1,14 +1,18 @@
 "use client";
 
-import Link from "next/link";
+import { AnimatePresence, motion, type PanInfo } from "motion/react";
 import { useRef, useState } from "react";
-import { ruta } from "@/lib/pantallas";
+import { Repaso } from "@/components/Repaso";
+import { RESORTE } from "@/components/Movimiento";
+import { usePunteroFino } from "@/lib/medios";
 import { marcarActividad, useProgreso } from "@/lib/progreso";
 
 export type Tarjeta = { texto: string; fuente?: string; cuenta: boolean; retro: string };
 
+const UMBRAL = 80;
+
 // Serie de situaciones, una por una, con dos respuestas posibles y la razón después de cada una.
-// La actividad queda resuelta cuando se aciertan todas.
+// En pantallas con ratón también se puede deslizar la tarjeta: a la derecha cuenta, a la izquierda no.
 export function Serie({
   clave,
   repaso,
@@ -19,17 +23,15 @@ export function Serie({
   retroBien,
 }: {
   clave: string;
-  repaso: number;
+  repaso: string;
   enunciado: string;
-  /** Lo que se dice cuando se aciertan todas. */
   retroBien: string;
-  /** Texto del botón para las situaciones que sí cumplen. */
   si: string;
-  /** Texto del botón para las que no cumplen. */
   no: string;
   tarjetas: Tarjeta[];
 }) {
   const progreso = useProgreso();
+  const punteroFino = usePunteroFino();
   const [respuestas, setRespuestas] = useState<boolean[]>([]);
   const [vista, setVista] = useState(0);
   const siguiente = useRef<HTMLButtonElement>(null);
@@ -40,13 +42,13 @@ export function Serie({
   const terminada = vista >= total;
 
   function responder(valor: boolean) {
+    if (respuestas.length > vista) return;
     const nuevas = [...respuestas, valor];
     setRespuestas(nuevas);
     if (nuevas.length === total && nuevas.every((r, i) => r === tarjetas[i].cuenta)) marcarActividad(clave, true);
     requestAnimationFrame(() => siguiente.current?.focus());
   }
 
-  // El foco pasa al comienzo de la situación nueva (o del resultado) para no perderse al cambiar de vista.
   function irA(i: number) {
     setVista(i);
     requestAnimationFrame(() => cabeza.current?.focus());
@@ -55,6 +57,12 @@ export function Serie({
   function repetir() {
     setRespuestas([]);
     irA(0);
+  }
+
+  function alSoltar(_: unknown, info: PanInfo) {
+    if (respuestas[vista] !== undefined) return;
+    if (info.offset.x > UMBRAL) responder(true);
+    else if (info.offset.x < -UMBRAL) responder(false);
   }
 
   const puntos = (
@@ -85,7 +93,12 @@ export function Serie({
         </p>
         {puntos}
         <div role="status">
-          <div className={todas ? "retro retro--bien" : "retro retro--mal"}>
+          <motion.div
+            className={todas ? "retro retro--bien" : "retro retro--mal"}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={RESORTE}
+          >
             <p className="retro__titulo">
               {aciertos} de {total} aciertos
             </p>
@@ -108,13 +121,11 @@ export function Serie({
                   <button type="button" className="boton" onClick={repetir}>
                     Repetir la serie
                   </button>
-                  <Link className="boton boton--suave" href={ruta(repaso)}>
-                    Volver a la pantalla {repaso}
-                  </Link>
+                  <Repaso id={repaso} boton />
                 </div>
               </>
             )}
-          </div>
+          </motion.div>
         </div>
       </section>
     );
@@ -136,34 +147,62 @@ export function Serie({
       <fieldset className="actividad__grupo">
         <legend className="actividad__enunciado">{enunciado}</legend>
         {puntos}
-        {/* La clave hace que cada situación entre como una tarjeta nueva. */}
-        <blockquote key={vista} className="serie__tarjeta">
-          <p>{tarjeta.texto}</p>
-          {tarjeta.fuente && <footer>{tarjeta.fuente}</footer>}
-        </blockquote>
+        <p className="actividad__ayuda">
+          {punteroFino
+            ? `Desliza la tarjeta a la derecha para «${si}» o a la izquierda para «${no}», o usa los botones.`
+            : "Usa los botones. También puedes deslizar la tarjeta si tu dispositivo lo permite."}
+        </p>
+        <AnimatePresence mode="wait">
+          <motion.blockquote
+            key={vista}
+            className="serie__tarjeta"
+            drag={respondida ? false : "x"}
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.55}
+            onDragEnd={alSoltar}
+            initial={{ opacity: 0, x: 24 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -24 }}
+            transition={RESORTE}
+            style={{ touchAction: "pan-y" }}
+          >
+            <p>{tarjeta.texto}</p>
+            {tarjeta.fuente && <footer>{tarjeta.fuente}</footer>}
+          </motion.blockquote>
+        </AnimatePresence>
         <div className="serie__botones">
           {[true, false].map((valor) => (
-            <button
+            <motion.button
               key={String(valor)}
               type="button"
               className="opcion"
               aria-pressed={dada === valor}
               disabled={respondida && dada !== valor}
               onClick={() => !respondida && responder(valor)}
+              whileTap={!respondida ? { scale: 0.97 } : undefined}
             >
               {valor ? si : no}
-            </button>
+            </motion.button>
           ))}
         </div>
       </fieldset>
 
       <div role="status">
-        {respondida && (
-          <div className={bien ? "retro retro--bien" : "retro retro--mal"}>
-            <p className="retro__titulo">{bien ? "Correcto" : `No: la respuesta es «${tarjeta.cuenta ? si : no}»`}</p>
-            <p>{tarjeta.retro}</p>
-          </div>
-        )}
+        <AnimatePresence>
+          {respondida && (
+            <motion.div
+              key={`${vista}-${String(dada)}`}
+              className={bien ? "retro retro--bien" : "retro retro--mal"}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={RESORTE}
+            >
+              <p className="retro__titulo">{bien ? "Correcto" : `No: la respuesta es «${tarjeta.cuenta ? si : no}»`}</p>
+              <p>{tarjeta.retro}</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {respondida && (

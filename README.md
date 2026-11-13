@@ -2,13 +2,14 @@
 
 Objeto Digital de Conocimiento de Wilson Alfonso Díaz Capador para el curso Ciencia, Tecnología e Innovación de la Especialización en Inteligencia Artificial, Universidad de Cundinamarca, Extensión Fusagasugá.
 
-Son 20 pantallas: portada, resultado y población, menú, siete módulos con su actividad, evaluación de ocho ítems, cierre, referencias y créditos. Es solo front: no tiene servidor ni base de datos. El progreso de cada estudiante se guarda en su propio navegador.
+El recorrido no está limitado a 20 pantallas: cada una tiene un nombre en la URL (`/beneficios/`, `/galeria/`, …) y una función clara. Incluye introducción interactiva, módulos con actividad, galería de diez casos, laboratorio de columnas, evaluación de ocho ítems, cierre, referencias y créditos. Es solo front: el progreso vive en el navegador del estudiante.
 
-Esta es la versión 2, con el rediseño oscuro y las animaciones. El cálculo del logro es el mismo de la versión 1 (carpeta `odc-web`): 7 de 8 y la decisión justificada. Cambian las actividades y la evaluación:
+Esta es la versión 2 (tema oscuro + Motion). El logro sigue siendo 7 de 8 y la decisión justificada.
 
-- La evaluación tiene dos cuestionarios paralelos de ocho ítems. Cada ítem parte de un caso y tiene tres opciones. Quien repite la evaluación recibe el otro cuestionario, con las opciones en otro orden.
-- Las actividades 1 a 5 son ordenar pasos, clasificar seis hallazgos, dos preguntas sobre un caso y una serie de seis situaciones. La 6 y la decisión justificada no cambian.
-- Los datos de los casos salen de los resúmenes de los artículos, tal como están en la matriz de la revisión de literatura.
+- Evaluación: dos cuestionarios paralelos de ocho ítems con caso y tres opciones.
+- Actividades: ordenar, clasificar, opción múltiple sobre casos, serie con deslizamiento, frase y decisión.
+- Galería y laboratorio: lectura interactiva de los diez casos de asistentes de la matriz.
+- Animación: `motion/react` (reordenar, deslizar, revelados) + View Transitions entre pantallas, con respeto a `prefers-reduced-motion`.
 
 El sistema visual está descrito en `DESIGN.md`.
 

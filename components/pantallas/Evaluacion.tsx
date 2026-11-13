@@ -1,9 +1,12 @@
 "use client";
 
+import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { useRef, useState, type CSSProperties } from "react";
+import { Repaso } from "@/components/Repaso";
+import { RESORTE } from "@/components/Movimiento";
 import { itemsDe, nombreForma, opcionesDe } from "@/lib/evaluacion";
-import { buscar, ruta } from "@/lib/pantallas";
+import { ruta } from "@/lib/pantallas";
 import {
   ITEMS_EVALUACION,
   MINIMO_ACIERTOS,
@@ -13,13 +16,7 @@ import {
 } from "@/lib/progreso";
 
 const LETRAS = ["A", "B", "C", "D"];
-
-// Perímetro del anillo del puntaje (radio 52).
 const VUELTA = 2 * Math.PI * 52;
-
-function nombrePantalla(n: number): string {
-  return `pantalla ${n}: ${buscar(n)?.titulo ?? ""}`;
-}
 
 export function Evaluacion() {
   const progreso = useProgreso();
@@ -41,13 +38,11 @@ export function Evaluacion() {
     requestAnimationFrame(() => siguiente.current?.focus());
   }
 
-  // El foco pasa al comienzo de la pregunta nueva (o del resultado) para no perderse al cambiar de vista.
   function irA(i: number) {
     setVista(i);
     requestAnimationFrame(() => cabeza.current?.focus());
   }
 
-  // Al repetir toca la otra forma del cuestionario.
   function repetir() {
     actualizar({ evaluacion: Array(ITEMS_EVALUACION).fill(null), intento: intento + 1 });
     irA(0);
@@ -73,7 +68,6 @@ export function Evaluacion() {
           <p ref={cabeza} tabIndex={-1} className="resultado__puntaje">
             <span className="resultado__numero">{aciertos}</span> de {ITEMS_EVALUACION} aciertos
           </p>
-          {/* Adorno: el texto de abajo ya dice que el resultado está logrado. */}
           {logrado && (
             <p className="sello" aria-hidden="true">
               Q.E.D.<small>queda demostrado</small>
@@ -92,7 +86,10 @@ export function Evaluacion() {
               {!justificada && (
                 <>
                   {" "}
-                  <Link href={ruta(16)}>Escribirla en la {nombrePantalla(16)}</Link>.
+                  <Link href={ruta("apropiacion")} transitionTypes={["nav-back"]}>
+                    Escribirla en Apropiación
+                  </Link>
+                  .
                 </>
               )}
             </li>
@@ -121,7 +118,7 @@ export function Evaluacion() {
                       La respuesta era: {correcta?.texto} {correcta?.retro}
                     </p>
                     <p>
-                      <Link href={ruta(item.repaso)}>Repasar en la {nombrePantalla(item.repaso)}</Link>
+                      <Repaso id={item.repaso} />
                     </p>
                   </>
                 )}
@@ -174,51 +171,68 @@ export function Evaluacion() {
         </ol>
       </div>
 
-      {/* La clave hace que cada pregunta entre como una vista nueva. */}
-      <div key={`${intento}-${actual}`} className="examen__item">
-        <p className="caso">
-          <span className="caso__rotulo">{item.criterio}</span>
-          {item.caso}
-        </p>
-        <fieldset className="actividad__grupo">
-          <legend className="actividad__enunciado">{item.pregunta}</legend>
-          <div className="opciones">
-            {opciones.map((opcion, i) => (
-              <button
-                key={opcion.id}
-                type="button"
-                className={dada !== null && opcion.id === item.correcta ? "opcion opcion--correcta" : "opcion"}
-                aria-pressed={dada === opcion.id}
-                disabled={dada !== null && dada !== opcion.id}
-                onClick={() => dada === null && responder(actual, opcion.id)}
-              >
-                <span className="opcion__letra" aria-hidden="true">
-                  {LETRAS[i]}
-                </span>
-                <span>{opcion.texto}</span>
-              </button>
-            ))}
-          </div>
-        </fieldset>
-      </div>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={`${intento}-${actual}`}
+          className="examen__item"
+          initial={{ opacity: 0, x: 18 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -18 }}
+          transition={RESORTE}
+        >
+          <p className="caso">
+            <span className="caso__rotulo">{item.criterio}</span>
+            {item.caso}
+          </p>
+          <fieldset className="actividad__grupo">
+            <legend className="actividad__enunciado">{item.pregunta}</legend>
+            <div className="opciones">
+              {opciones.map((opcion, i) => (
+                <button
+                  key={opcion.id}
+                  type="button"
+                  className={dada !== null && opcion.id === item.correcta ? "opcion opcion--correcta" : "opcion"}
+                  aria-pressed={dada === opcion.id}
+                  disabled={dada !== null && dada !== opcion.id}
+                  onClick={() => dada === null && responder(actual, opcion.id)}
+                >
+                  <span className="opcion__letra" aria-hidden="true">
+                    {LETRAS[i]}
+                  </span>
+                  <span>{opcion.texto}</span>
+                </button>
+              ))}
+            </div>
+          </fieldset>
+        </motion.div>
+      </AnimatePresence>
 
       <div role="status">
-        {elegida && (
-          <div className={bien ? "retro retro--bien" : "retro retro--mal"}>
-            <p className="retro__titulo">{bien ? "Correcto" : "Incorrecto"}</p>
-            <p>{elegida.retro}</p>
-            {!bien && (
-              <>
-                <p>
-                  La respuesta era: {correcta?.texto} {correcta?.retro}
-                </p>
-                <p>
-                  <Link href={ruta(item.repaso)}>Repasar en la {nombrePantalla(item.repaso)}</Link>
-                </p>
-              </>
-            )}
-          </div>
-        )}
+        <AnimatePresence>
+          {elegida && (
+            <motion.div
+              key={elegida.id}
+              className={bien ? "retro retro--bien" : "retro retro--mal"}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={RESORTE}
+            >
+              <p className="retro__titulo">{bien ? "Correcto" : "Incorrecto"}</p>
+              <p>{elegida.retro}</p>
+              {!bien && (
+                <>
+                  <p>
+                    La respuesta era: {correcta?.texto} {correcta?.retro}
+                  </p>
+                  <p>
+                    <Repaso id={item.repaso} />
+                  </p>
+                </>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {dada !== null && (

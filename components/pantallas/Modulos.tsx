@@ -117,8 +117,8 @@ export function Formalizar() {
           enlace="Artículo de Lund y Villadsen (2024)"
         >
           <p>
-            Acercan esa exigencia al aula: usan razonamiento verificado para enseñar cálculo de secuentes, de modo que
-            la prueba se revisa mientras se aprende.
+            Acercan esa exigencia al aula: plantean usar pruebas comprobadas por la máquina para enseñar cálculo de
+            secuentes, de modo que la revisión forme parte del aprendizaje.
           </p>
         </Ficha>
       </div>
@@ -386,13 +386,12 @@ export function Validacion() {
           enlace="Artículo de Lund y Villadsen (2024)"
         >
           <p>
-            Usan razonamiento verificado para enseñar cálculo de secuentes a estudiantes de ciencias de la
-            computación. La validación y la formación van juntas: el estudiante no recibe solo un resultado, sino que
-            trabaja con una prueba que se puede revisar mientras aprende el cálculo.
+            Construyen un demostrador y un sistema de pruebas comprobadas por la máquina. Plantean usarlo para enseñar
+            lógica, razonamiento automático y asistentes de prueba a estudiantes de computación.
           </p>
           <p>
-            Por eso el caso se parece a una clase de posgrado. No exige el cómputo de un laboratorio industrial. Exige
-            una actividad donde la prueba sea parte del estudio.
+            Por eso el caso se acerca a una clase de posgrado: la validación no exige el cómputo de un laboratorio
+            industrial; exige una actividad donde la prueba sea parte del estudio.
           </p>
         </Ficha>
         <Ficha
@@ -565,9 +564,9 @@ export function Apropiacion() {
       </div>
 
       <p>
-        Lund y Villadsen (2024) muestran que esa apropiación cabe en una actividad de formación. No es un consejo
-        suelto: en ese estudio la prueba verificada se usa para enseñar. Las condiciones de la segunda lista aparecen
-        como límite en Kaufmann (2022) y en el cuidado de Benzmüller y Scott (2020). Reconocerlas también es analizar.
+        Lund y Villadsen (2024) muestran que esa apropiación cabe en una actividad de formación: plantean usar la
+        prueba verificada para enseñar. Las condiciones de la segunda lista aparecen como límite en Kaufmann (2022) y
+        en el cuidado de Benzmüller y Scott (2020). Reconocerlas también es analizar.
       </p>
 
       <section className="actividad">
@@ -588,7 +587,7 @@ export function Apropiacion() {
             <div className="retro retro--bien">
               <p className="retro__titulo">La opción A se sostiene</p>
               <p>
-                Lund y Villadsen (2024) muestran que la prueba verificada cabe en una actividad de formación. Ahora
+                Lund y Villadsen (2024) plantean usar la prueba verificada en una actividad de formación. Ahora
                 justifica tu decisión.
               </p>
             </div>

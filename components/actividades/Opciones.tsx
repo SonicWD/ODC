@@ -1,8 +1,9 @@
 "use client";
 
-import Link from "next/link";
+import { AnimatePresence, motion } from "motion/react";
 import { useRef, useState } from "react";
-import { ruta } from "@/lib/pantallas";
+import { Repaso } from "@/components/Repaso";
+import { RESORTE } from "@/components/Movimiento";
 import { marcarActividad, useProgreso } from "@/lib/progreso";
 
 export type Opcion = { id: string; etiqueta: string; correcta: boolean; retro: string };
@@ -20,7 +21,7 @@ export function Opciones({
   caso?: string;
   enunciado: string;
   opciones: Opcion[];
-  repaso: number;
+  repaso: string;
 }) {
   const progreso = useProgreso();
   const [elegida, setElegida] = useState<string | null>(null);
@@ -52,7 +53,7 @@ export function Opciones({
         <legend className="actividad__enunciado">{enunciado}</legend>
         <div className="opciones">
           {opciones.map((opcion, i) => (
-            <button
+            <motion.button
               key={opcion.id}
               ref={i === 0 ? primera : undefined}
               type="button"
@@ -60,32 +61,41 @@ export function Opciones({
               aria-pressed={elegida === opcion.id}
               disabled={elegida !== null && elegida !== opcion.id}
               onClick={() => elegir(opcion)}
+              whileTap={elegida === null ? { scale: 0.985 } : undefined}
+              transition={RESORTE}
             >
               {opcion.etiqueta}
-            </button>
+            </motion.button>
           ))}
         </div>
       </fieldset>
 
       <div role="status">
-        {respuesta && (
-          <div className={respuesta.correcta ? "retro retro--bien" : "retro retro--mal"}>
-            <p className="retro__titulo">{respuesta.correcta ? "Correcto" : "Todavía no"}</p>
-            <p>{respuesta.retro}</p>
-            {respuesta.correcta ? (
-              <p>Puedes seguir.</p>
-            ) : (
-              <div className="retro__acciones">
-                <button type="button" className="boton" onClick={reintentar}>
-                  Reintentar
-                </button>
-                <Link className="boton boton--suave" href={ruta(repaso)}>
-                  Volver a la pantalla {repaso}
-                </Link>
-              </div>
-            )}
-          </div>
-        )}
+        <AnimatePresence>
+          {respuesta && (
+            <motion.div
+              key={respuesta.id}
+              className={respuesta.correcta ? "retro retro--bien" : "retro retro--mal"}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={RESORTE}
+            >
+              <p className="retro__titulo">{respuesta.correcta ? "Correcto" : "Todavía no"}</p>
+              <p>{respuesta.retro}</p>
+              {respuesta.correcta ? (
+                <p>Puedes seguir.</p>
+              ) : (
+                <div className="retro__acciones">
+                  <button type="button" className="boton" onClick={reintentar}>
+                    Reintentar
+                  </button>
+                  <Repaso id={repaso} boton />
+                </div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );

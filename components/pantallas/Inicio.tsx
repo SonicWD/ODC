@@ -35,7 +35,7 @@ export function Portada() {
         <p className="portada__bajada">{SITIO.tituloLargo}.</p>
 
         <div className="portada__acciones">
-          <Link className="boton boton--grande" href={ruta(2)} transitionTypes={["nav-forward"]}>
+          <Link className="boton boton--grande" href={ruta("resultado")} transitionTypes={["nav-forward"]}>
             Iniciar <span aria-hidden="true">→</span>
           </Link>
           <Ventana etiqueta="Ayuda" titulo="Cómo usar este recurso" clase="boton boton--suave boton--grande">
@@ -47,6 +47,10 @@ export function Portada() {
                 texto.
               </li>
               <li>Cada módulo cierra con una actividad. Verás por qué la respuesta sirve o por qué no.</li>
+              <li>
+                En las actividades puedes arrastrar con el ratón o con el dedo. Todas tienen además botones, para
+                usarlas con el teclado.
+              </li>
               <li>
                 Tus respuestas se guardan solo en este navegador. Puedes borrarlas en la pantalla Menú.
               </li>
@@ -167,7 +171,7 @@ export function MenuPantalla() {
           actividades resueltas
         </p>
       </div>
-      <MenuLista actual={3} nivel={2} />
+      <MenuLista actual="menu" nivel={2} />
       <div className="reinicio">
         <Ventana etiqueta="Borrar mis respuestas" titulo="¿Borrar tus respuestas?" clase="boton boton--suave boton--chico">
           <p>

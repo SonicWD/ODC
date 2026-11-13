@@ -25,9 +25,9 @@ export const POBLACION =
   "Estudiantes de posgrado de la Especialización en Inteligencia Artificial, Universidad de Cundinamarca, Extensión Fusagasugá.";
 
 // Para usar un audio grabado: guárdalo en public/audio y escribe aquí su ruta
-// con el número de pantalla, por ejemplo { 4: "/audio/pantalla-04.mp3" }.
+// con el nombre de la pantalla (el de lib/pantallas.ts), por ejemplo { formalizar: "/audio/formalizar.mp3" }.
 // Las pantallas sin audio grabado usan la voz del navegador.
-export const AUDIOS: Record<number, string> = {};
+export const AUDIOS: Record<string, string> = {};
 
 export function conBase(ruta: string): string {
   return `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${ruta}`;

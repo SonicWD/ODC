@@ -15,7 +15,7 @@ export type Item = {
   /** id de la opción correcta. */
   correcta: string;
   /** Pantalla a la que se envía a repasar si falla. */
-  repaso: number;
+  repaso: string;
 };
 
 const FORMA_A: Item[] = [
@@ -41,7 +41,7 @@ const FORMA_A: Item[] = [
       },
     ],
     correcta: "b",
-    repaso: 4,
+    repaso: "formalizar",
   },
   {
     criterio: "Tres criterios",
@@ -65,7 +65,7 @@ const FORMA_A: Item[] = [
       },
     ],
     correcta: "c",
-    repaso: 6,
+    repaso: "criterios",
   },
   {
     criterio: "Beneficios",
@@ -89,7 +89,7 @@ const FORMA_A: Item[] = [
       },
     ],
     correcta: "a",
-    repaso: 8,
+    repaso: "beneficios",
   },
   {
     criterio: "Limitaciones",
@@ -113,7 +113,7 @@ const FORMA_A: Item[] = [
       },
     ],
     correcta: "b",
-    repaso: 10,
+    repaso: "limitaciones",
   },
   {
     criterio: "Validación",
@@ -137,7 +137,7 @@ const FORMA_A: Item[] = [
       },
     ],
     correcta: "c",
-    repaso: 12,
+    repaso: "validacion",
   },
   {
     criterio: "Caso",
@@ -161,7 +161,7 @@ const FORMA_A: Item[] = [
       },
     ],
     correcta: "a",
-    repaso: 14,
+    repaso: "caso",
   },
   {
     criterio: "Apropiación",
@@ -185,7 +185,7 @@ const FORMA_A: Item[] = [
       },
     ],
     correcta: "c",
-    repaso: 16,
+    repaso: "apropiacion",
   },
   {
     criterio: "Resultado de aprendizaje",
@@ -209,7 +209,7 @@ const FORMA_A: Item[] = [
       },
     ],
     correcta: "b",
-    repaso: 2,
+    repaso: "resultado",
   },
 ];
 
@@ -236,7 +236,7 @@ const FORMA_B: Item[] = [
       },
     ],
     correcta: "a",
-    repaso: 4,
+    repaso: "formalizar",
   },
   {
     criterio: "Tres criterios",
@@ -260,7 +260,7 @@ const FORMA_B: Item[] = [
       },
     ],
     correcta: "a",
-    repaso: 6,
+    repaso: "criterios",
   },
   {
     criterio: "Beneficios",
@@ -284,7 +284,7 @@ const FORMA_B: Item[] = [
       },
     ],
     correcta: "c",
-    repaso: 8,
+    repaso: "beneficios",
   },
   {
     criterio: "Limitaciones",
@@ -308,7 +308,7 @@ const FORMA_B: Item[] = [
       },
     ],
     correcta: "a",
-    repaso: 10,
+    repaso: "limitaciones",
   },
   {
     criterio: "Validación",
@@ -332,7 +332,7 @@ const FORMA_B: Item[] = [
       },
     ],
     correcta: "b",
-    repaso: 12,
+    repaso: "validacion",
   },
   {
     criterio: "Caso",
@@ -356,7 +356,7 @@ const FORMA_B: Item[] = [
       },
     ],
     correcta: "c",
-    repaso: 14,
+    repaso: "caso",
   },
   {
     criterio: "Apropiación",
@@ -380,7 +380,7 @@ const FORMA_B: Item[] = [
       },
     ],
     correcta: "a",
-    repaso: 16,
+    repaso: "apropiacion",
   },
   {
     criterio: "Resultado de aprendizaje",
@@ -404,7 +404,7 @@ const FORMA_B: Item[] = [
       },
     ],
     correcta: "c",
-    repaso: 2,
+    repaso: "resultado",
   },
 ];
 

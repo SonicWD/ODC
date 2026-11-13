@@ -3,17 +3,18 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { Externo, Fuente } from "@/components/Piezas";
-import { buscar, ruta } from "@/lib/pantallas";
+import { Repaso } from "@/components/Repaso";
+import { ruta } from "@/lib/pantallas";
 import { ITEMS_EVALUACION, actualizar, decisionJustificada, useProgreso } from "@/lib/progreso";
 import { REFERENCIAS } from "@/lib/referencias";
 import { SITIO } from "@/lib/sitio";
 
-/* ---------- Pantalla 18 · Cierre ---------- */
+/* ---------- Cierre ---------- */
 
 const CASILLAS = [
-  { texto: "Puedo explicar qué es formalizar conocimiento científico.", repaso: 4 },
-  { texto: "Puedo separar beneficio, limitación y validación en un caso.", repaso: 6 },
-  { texto: "Puedo decir qué apropiaría en mi posgrado y qué no depende de un gran laboratorio.", repaso: 16 },
+  { texto: "Puedo explicar qué es formalizar conocimiento científico.", repaso: "formalizar" },
+  { texto: "Puedo separar beneficio, limitación y validación en un caso.", repaso: "criterios" },
+  { texto: "Puedo decir qué apropiaría en mi posgrado y qué no depende de un gran laboratorio.", repaso: "apropiacion" },
 ];
 
 export function Cierre() {
@@ -40,9 +41,9 @@ export function Cierre() {
               <span>{casilla.texto}</span>
             </label>
             {!progreso.cierre[i] && (
-              <Link className="casilla__repaso" href={ruta(casilla.repaso)}>
-                Repasar en la pantalla {casilla.repaso}: {buscar(casilla.repaso)?.titulo}
-              </Link>
+              <span className="casilla__repaso">
+                <Repaso id={casilla.repaso} />
+              </span>
             )}
           </li>
         ))}
@@ -59,10 +60,10 @@ export function Cierre() {
       </ul>
 
       <div className="fila-botones">
-        <Link className="boton boton--suave" href={ruta(19)}>
+        <Link className="boton boton--suave" href={ruta("referencias")} transitionTypes={["nav-forward"]}>
           Referencias
         </Link>
-        <Link className="boton boton--suave" href={ruta(20)}>
+        <Link className="boton boton--suave" href={ruta("creditos")} transitionTypes={["nav-forward"]}>
           Créditos
         </Link>
       </div>
@@ -70,7 +71,7 @@ export function Cierre() {
   );
 }
 
-/* ---------- Pantalla 19 · Referencias ---------- */
+/* ---------- Referencias ---------- */
 
 export function Referencias() {
   return (
@@ -94,7 +95,7 @@ export function Referencias() {
   );
 }
 
-/* ---------- Pantalla 20 · Créditos y licencia ---------- */
+/* ---------- Créditos y licencia ---------- */
 
 const RECURSOS: { titulo: string; autor: string; fuente: ReactNode; licencia: string }[] = [
   {

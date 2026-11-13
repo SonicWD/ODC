@@ -1,8 +1,9 @@
 "use client";
 
-import Link from "next/link";
+import { AnimatePresence, motion } from "motion/react";
 import { useId, useState } from "react";
-import { ruta } from "@/lib/pantallas";
+import { Repaso } from "@/components/Repaso";
+import { RESORTE } from "@/components/Movimiento";
 import { actualizar, contarPalabras, marcarActividad, useProgreso } from "@/lib/progreso";
 
 // Palabras que muestran que la frase nombra la prueba, el alcance o la supervisión.
@@ -24,7 +25,7 @@ function senalesEn(frase: string): string[] {
   return SENALES.filter((s) => s.raices.some((raiz) => limpia.includes(raiz))).map((s) => s.nombre);
 }
 
-export function Frase({ clave, pregunta, repaso }: { clave: string; pregunta: string; repaso: number }) {
+export function Frase({ clave, pregunta, repaso }: { clave: string; pregunta: string; repaso: string }) {
   const progreso = useProgreso();
   const [comprobada, setComprobada] = useState(false);
   const idCampo = useId();
@@ -64,28 +65,41 @@ export function Frase({ clave, pregunta, repaso }: { clave: string; pregunta: st
       </button>
 
       <div role="status">
-        {comprobada && sirve && (
-          <div className="retro retro--bien">
-            <p className="retro__titulo">La frase sirve</p>
-            <p>Nombras {halladas.join(" y ")}. Eso es lo que se revisa antes de usar el resultado. Puedes seguir.</p>
-          </div>
-        )}
-        {comprobada && !sirve && (
-          <div className="retro retro--mal">
-            <p className="retro__titulo">Todavía no</p>
-            <p>
-              {corta
-                ? "La frase es muy corta. Di qué revisarías tú."
-                : "Tu frase no nombra la prueba, el alcance ni la supervisión. Decir que la inteligencia artificial ya lo resolvió no es revisar."}{" "}
-              Vuelve a la pantalla {repaso} y reescríbela con una de las tres columnas.
-            </p>
-            <div className="retro__acciones">
-              <Link className="boton boton--suave" href={ruta(repaso)}>
-                Volver a la pantalla {repaso}
-              </Link>
-            </div>
-          </div>
-        )}
+        <AnimatePresence>
+          {comprobada && (
+            <motion.div
+              key={sirve ? "bien" : "mal"}
+              className={sirve ? "retro retro--bien" : "retro retro--mal"}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={RESORTE}
+            >
+              {sirve ? (
+                <>
+                  <p className="retro__titulo">La frase sirve</p>
+                  <p>
+                    Nombras {halladas.join(" y ")}. Eso es lo que se revisa antes de usar el resultado. Puedes
+                    seguir.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="retro__titulo">Todavía no</p>
+                  <p>
+                    {corta
+                      ? "La frase es muy corta. Di qué revisarías tú."
+                      : "Tu frase no nombra la prueba, el alcance ni la supervisión. Decir que la inteligencia artificial ya lo resolvió no es revisar."}{" "}
+                    Vuelve al caso guiado y reescríbela con una de las tres columnas.
+                  </p>
+                  <div className="retro__acciones">
+                    <Repaso id={repaso} boton />
+                  </div>
+                </>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );

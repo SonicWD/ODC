@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
+import type { ReactNode } from "react";
 import { Marco } from "@/components/Marco";
+import { Movimiento } from "@/components/Movimiento";
 import { SITIO } from "@/lib/sitio";
 import "./globals.css";
 
@@ -21,11 +23,13 @@ export const viewport: Viewport = {
   colorScheme: "dark",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="es" className={`${texto.variable} ${mono.variable}`}>
       <body>
-        <Marco>{children}</Marco>
+        <Movimiento>
+          <Marco>{children}</Marco>
+        </Movimiento>
       </body>
     </html>
   );

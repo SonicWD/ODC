@@ -1,64 +1,50 @@
 "use client";
 
 import Link from "next/link";
+import { Fragment, type CSSProperties, type PointerEvent } from "react";
 import { BotonEscuchar } from "@/components/Guia";
 import { MenuLista } from "@/components/MenuLista";
+import { Prueba } from "@/components/Prueba";
 import { Ventana } from "@/components/Ventana";
-import { ruta } from "@/lib/pantallas";
-import { reiniciar } from "@/lib/progreso";
+import { MENU, ruta } from "@/lib/pantallas";
+import { reiniciar, useProgreso } from "@/lib/progreso";
 import { POBLACION, REA, SITIO } from "@/lib/sitio";
 
-function IlustracionPortada() {
-  const pasos = [28, 88, 148];
-  return (
-    <svg
-      className="portada__figura"
-      viewBox="0 0 260 200"
-      role="img"
-      aria-label="Tres pasos de una prueba, cada uno con su marca de revisión"
-    >
-      <rect x="18" y="8" width="224" height="184" rx="16" fill="#ffffff" stroke="#cfd8d0" strokeWidth="2" />
-      <path d="M52 44v120" stroke="#0b3d2e" strokeWidth="3" strokeDasharray="2 8" strokeLinecap="round" />
-      {pasos.map((y, i) => (
-        <g key={y}>
-          <circle cx="52" cy={y + 16} r="14" fill="#0b3d2e" />
-          <text x="52" y={y + 21} textAnchor="middle" fontSize="14" fontWeight="700" fill="#ffffff">
-            {i + 1}
-          </text>
-          <rect x="78" y={y + 4} width="104" height="9" rx="4.5" fill="#16211c" opacity="0.82" />
-          <rect x="78" y={y + 20} width="72" height="7" rx="3.5" fill="#9aa8a0" />
-          <circle cx="212" cy={y + 16} r="13" fill="#f2c230" />
-          <path
-            d={`M205 ${y + 16}l5 5 9-10`}
-            fill="none"
-            stroke="#16211c"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </g>
-      ))}
-    </svg>
-  );
+// El brillo del fondo sigue al puntero. Es decorativo y solo se ve si el usuario acepta movimiento.
+function seguirPuntero(evento: PointerEvent<HTMLDivElement>) {
+  const caja = evento.currentTarget.getBoundingClientRect();
+  evento.currentTarget.style.setProperty("--x", `${evento.clientX - caja.left}px`);
+  evento.currentTarget.style.setProperty("--y", `${evento.clientY - caja.top}px`);
 }
 
 export function Portada() {
   return (
-    <div className="portada">
+    <div className="portada" onPointerMove={seguirPuntero}>
+      <div className="portada__texto">
         <p className="seccion">Objeto Digital de Conocimiento · Universidad de Cundinamarca</p>
-        <h1 className="portada__titulo">{SITIO.tituloCorto}</h1>
+        <h1 className="portada__titulo">
+          {/* Cada palabra va en su caja para que entre por separado. El espacio queda fuera para que no se pierda. */}
+          {SITIO.tituloCorto.split(" ").map((palabra, i) => (
+            <Fragment key={i}>
+              <span className="portada__palabra" style={{ "--i": i } as CSSProperties}>
+                {palabra}
+              </span>{" "}
+            </Fragment>
+          ))}
+        </h1>
         <p className="portada__bajada">{SITIO.tituloLargo}.</p>
 
         <div className="portada__acciones">
-          <Link className="boton boton--grande" href={ruta(2)}>
+          <Link className="boton boton--grande" href={ruta(2)} transitionTypes={["nav-forward"]}>
             Iniciar <span aria-hidden="true">→</span>
           </Link>
           <Ventana etiqueta="Ayuda" titulo="Cómo usar este recurso" clase="boton boton--suave boton--grande">
             <ul>
-              <li>Avanza con Seguir y regresa con Atrás, al final de cada pantalla.</li>
+              <li>Avanza con Seguir y regresa con Atrás, en la barra inferior.</li>
               <li>El botón Menú, arriba, abre todas las secciones. No hay un orden obligatorio.</li>
               <li>
-                Escuchar al guía reproduce la voz de la pantalla. Transcripción muestra ese mismo texto.
+                En la misma barra, Escuchar al guía reproduce la voz de la pantalla y Transcripción muestra ese
+                texto.
               </li>
               <li>Cada módulo cierra con una actividad. Verás por qué la respuesta sirve o por qué no.</li>
               <li>
@@ -67,6 +53,9 @@ export function Portada() {
             </ul>
           </Ventana>
         </div>
+      </div>
+
+      <Prueba />
 
       <div className="portada__base">
         <dl className="datos">
@@ -91,7 +80,6 @@ export function Portada() {
             </dd>
           </div>
         </dl>
-        <IlustracionPortada />
       </div>
     </div>
   );
@@ -150,10 +138,35 @@ export function ResultadoPoblacion() {
   );
 }
 
+const MODULOS = MENU.flatMap((grupo) => grupo.entradas).filter((entrada) => entrada.actividad);
+const VUELTA = 2 * Math.PI * 26;
+
 export function MenuPantalla() {
+  const progreso = useProgreso();
+  const resueltas = MODULOS.filter((m) => m.actividad && progreso.actividades[m.actividad]).length;
+
   return (
     <>
       <p className="entrada">Elige una sección. El orden no es obligatorio.</p>
+      <div className="avance">
+        <svg className="avance__anillo" viewBox="0 0 64 64" aria-hidden="true">
+          <circle cx="32" cy="32" r="26" className="avance__fondo" />
+          <circle
+            cx="32"
+            cy="32"
+            r="26"
+            className="avance__trazo"
+            strokeDasharray={VUELTA}
+            strokeDashoffset={VUELTA * (1 - resueltas / MODULOS.length)}
+          />
+        </svg>
+        <p className="avance__texto">
+          <b>
+            {resueltas} de {MODULOS.length}
+          </b>{" "}
+          actividades resueltas
+        </p>
+      </div>
       <MenuLista actual={3} nivel={2} />
       <div className="reinicio">
         <Ventana etiqueta="Borrar mis respuestas" titulo="¿Borrar tus respuestas?" clase="boton boton--suave boton--chico">

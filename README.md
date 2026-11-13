@@ -4,6 +4,8 @@ Objeto Digital de Conocimiento de Wilson Alfonso Díaz Capador para el curso Cie
 
 Son 20 pantallas: portada, resultado y población, menú, siete módulos con su actividad, evaluación de ocho ítems, cierre, referencias y créditos. Es solo front: no tiene servidor ni base de datos. El progreso de cada estudiante se guarda en su propio navegador.
 
+Esta es la versión 2, con el rediseño oscuro y las animaciones. El contenido, las actividades y el cálculo del logro son los mismos de la versión 1 (carpeta `odc-web`). El sistema visual está descrito en `DESIGN.md`.
+
 ## Requisitos
 
 Node.js 20.9 o superior.
@@ -46,13 +48,16 @@ npm run preview  # sirve out/ para revisarlo antes de publicar
 | Enunciados y retroalimentación de las actividades | `components/pantallas/Actividades.tsx` |
 | Ítems de la evaluación | `components/pantallas/Evaluacion.tsx` |
 | Cierre, referencias y créditos | `components/pantallas/Final.tsx` |
-| Colores y estilos | `app/globals.css` |
+| Cabecera, avance y barra inferior (Atrás, guía, Seguir) | `components/Marco.tsx` |
+| Encabezado de cada pantalla y transición entre pantallas | `components/Pantalla.tsx` |
+| Prueba animada de la portada | `components/Prueba.tsx` |
+| Colores, estilos y animaciones | `app/globals.css` (los colores están al inicio, en `:root`) |
 
 El logro se calcula en `lib/progreso.ts`: 7 de 8 aciertos (al menos 80 %) y la decisión justificada del módulo de apropiación, con 15 palabras como mínimo.
 
 ## Voz del guía
 
-Cada pantalla tiene un texto para el guía. Si no hay audio grabado, lo lee la síntesis de voz del navegador, y la voz depende del equipo de cada estudiante. La transcripción siempre queda visible bajo el botón.
+Cada pantalla tiene un texto para el guía. El reproductor está en la barra inferior. Si no hay audio grabado, lo lee la síntesis de voz del navegador, y la voz depende del equipo de cada estudiante. El botón Transcripción muestra el mismo texto.
 
 Para usar audios grabados:
 
@@ -66,6 +71,10 @@ Para usar audios grabados:
    ```
 
 Las pantallas registradas muestran un reproductor de audio. Las demás siguen con la voz del navegador.
+
+## Movimiento y accesibilidad
+
+Todas las animaciones se apagan cuando el sistema del estudiante pide reducir el movimiento. Sin animación, cada pantalla se ve en su estado final. El deslizamiento entre pantallas usa transiciones de vista: los navegadores que no las admiten cambian de pantalla sin animar.
 
 ## Licencia
 

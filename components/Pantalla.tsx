@@ -1,7 +1,8 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { Marco } from "@/components/Marco";
+import { ViewTransition, type ReactNode } from "react";
+import { buscar } from "@/lib/pantallas";
+import { SITIO } from "@/lib/sitio";
 import {
   Actividad1,
   Actividad2,
@@ -46,7 +47,38 @@ const CUERPOS: Record<number, () => ReactNode> = {
   20: Creditos,
 };
 
+// Seguir desliza hacia adelante y Atrás hacia atrás; cualquier otro salto funde.
+const DESLIZAR = { "nav-forward": "nav-forward", "nav-back": "nav-back", default: "auto" } as const;
+
+function dos(n: number): string {
+  return String(n).padStart(2, "0");
+}
+
+// Contenido de una pantalla. La cabecera y la barra inferior están en components/Marco.tsx.
 export function Pantalla({ n }: { n: number }) {
+  const datos = buscar(n);
   const Cuerpo = CUERPOS[n];
-  return <Marco n={n}>{Cuerpo ? <Cuerpo /> : null}</Marco>;
+  if (!datos || !Cuerpo) return null;
+
+  return (
+    <ViewTransition enter={DESLIZAR} exit={DESLIZAR} default="none">
+      <main id="contenido" className={n === 1 ? "lienzo lienzo--portada" : "lienzo"}>
+        {n > 1 && (
+          <div className="lienzo__encabezado">
+            <p className="seccion">
+              <span className="seccion__numero">{dos(n)}</span>
+              {datos.seccion}
+            </p>
+            <h1 className="titulo">{datos.titulo}</h1>
+          </div>
+        )}
+        <div className="lienzo__contenido">
+          <Cuerpo />
+        </div>
+        <p className="licencia">
+          {SITIO.autor} · {SITIO.programa}, Universidad de Cundinamarca · {SITIO.licencia.sigla}
+        </p>
+      </main>
+    </ViewTransition>
+  );
 }

@@ -20,11 +20,12 @@ export function MenuLista({ actual, nivel }: { actual: number; nivel: 2 | 3 }) {
                 <li key={entrada.n}>
                   <Link
                     href={ruta(entrada.n)}
-                    className="menu__enlace"
+                    className={resuelta ? "menu__enlace menu__enlace--resuelta" : "menu__enlace"}
                     aria-current={actual === entrada.n ? "page" : undefined}
+                    transitionTypes={[entrada.n >= actual ? "nav-forward" : "nav-back"]}
                   >
                     <span className="menu__numero" aria-hidden="true">
-                      {entrada.n}
+                      {String(entrada.n).padStart(2, "0")}
                     </span>
                     <span className="menu__nombre">{entrada.etiqueta}</span>
                     {entrada.actividad && (

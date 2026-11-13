@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { buscar, ruta } from "@/lib/pantallas";
 import {
   ITEMS_EVALUACION,
@@ -63,6 +63,9 @@ const ITEMS: { texto: string; verdadero: boolean; razon: string; repaso: number 
   },
 ];
 
+// Perímetro del anillo del puntaje (radio 52).
+const VUELTA = 2 * Math.PI * 52;
+
 function nombrePantalla(n: number): string {
   return `pantalla ${n}: ${buscar(n)?.titulo ?? ""}`;
 }
@@ -91,9 +94,29 @@ export function Evaluacion() {
     const logrado = aciertos >= MINIMO_ACIERTOS && justificada;
     return (
       <section className="resultado">
-        <p className="resultado__puntaje">
-          <span className="resultado__numero">{aciertos}</span> de {ITEMS_EVALUACION} aciertos
-        </p>
+        <div className="resultado__cabeza">
+          <svg className="resultado__anillo" viewBox="0 0 120 120" aria-hidden="true">
+            <circle cx="60" cy="60" r="52" />
+            <circle
+              className="resultado__trazo"
+              cx="60"
+              cy="60"
+              r="52"
+              strokeDasharray={VUELTA}
+              strokeDashoffset={VUELTA * (1 - aciertos / ITEMS_EVALUACION)}
+              style={{ "--vuelta": VUELTA } as CSSProperties}
+            />
+          </svg>
+          <p className="resultado__puntaje">
+            <span className="resultado__numero">{aciertos}</span> de {ITEMS_EVALUACION} aciertos
+          </p>
+          {/* Adorno: el texto de abajo ya dice que el resultado está logrado. */}
+          {logrado && (
+            <p className="sello" aria-hidden="true">
+              Q.E.D.<small>queda demostrado</small>
+            </p>
+          )}
+        </div>
         <div className={logrado ? "retro retro--bien" : "retro retro--mal"} role="status">
           <p className="retro__titulo">{logrado ? "Resultado de aprendizaje logrado" : "Todavía falta"}</p>
           <ul>

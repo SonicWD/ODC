@@ -122,10 +122,16 @@ const RECURSOS: { titulo: string; autor: string; fuente: ReactNode; licencia: st
     licencia: "CC0 1.0. Solo se enlaza.",
   },
   {
-    titulo: "Tipografías Source Serif 4 y Source Sans 3",
-    autor: "Adobe",
+    titulo: "Tipografías Inter y JetBrains Mono",
+    autor: "Rasmus Andersson (Inter) y JetBrains (JetBrains Mono)",
     fuente: <Externo href="https://fonts.google.com/">Google Fonts</Externo>,
     licencia: "SIL Open Font License 1.1",
+  },
+  {
+    titulo: "Guía de diseño DESIGN.md de VoltAgent (referencia visual)",
+    autor: "VoltAgent",
+    fuente: <Externo href="https://github.com/VoltAgent/awesome-design-md">GitHub, awesome-design-md</Externo>,
+    licencia: "MIT. Se tomó como referencia de color y tipografía.",
   },
 ];
 

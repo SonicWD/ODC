@@ -1,10 +1,11 @@
-import type { Metadata } from "next";
-import { Source_Sans_3, Source_Serif_4 } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Inter, JetBrains_Mono } from "next/font/google";
+import { Marco } from "@/components/Marco";
 import { SITIO } from "@/lib/sitio";
 import "./globals.css";
 
-const texto = Source_Sans_3({ variable: "--fuente-texto", subsets: ["latin"] });
-const titulos = Source_Serif_4({ variable: "--fuente-titulos", subsets: ["latin"] });
+const texto = Inter({ variable: "--fuente-texto", subsets: ["latin"] });
+const mono = JetBrains_Mono({ variable: "--fuente-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
@@ -15,10 +16,17 @@ export const metadata: Metadata = {
   authors: [{ name: SITIO.autor }],
 };
 
+export const viewport: Viewport = {
+  themeColor: "#0e0f0e",
+  colorScheme: "dark",
+};
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="es" className={`${texto.variable} ${titulos.variable}`}>
-      <body>{children}</body>
+    <html lang="es" className={`${texto.variable} ${mono.variable}`}>
+      <body>
+        <Marco>{children}</Marco>
+      </body>
     </html>
   );
 }

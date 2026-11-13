@@ -338,11 +338,22 @@ a:hover {
   transform-origin: inline-start;
 }
 
+/* El lienzo ocupa todo el ancho (el fondo no se corta). El texto útil se centra con --ancho. */
 .lienzo {
+  inline-size: 100%;
+  margin-inline: 0;
+  padding-block: 2.5rem 2rem;
+  padding-inline: 0;
+}
+
+.lienzo__encabezado,
+.lienzo__contenido,
+.lienzo > .licencia {
   inline-size: 100%;
   max-inline-size: var(--ancho);
   margin-inline: auto;
-  padding: 2.5rem 1.25rem 2rem;
+  padding-inline: 1.25rem;
+  box-sizing: border-box;
 }
 
 .lienzo__encabezado {
@@ -359,24 +370,40 @@ a:hover {
 @media (min-width: 64rem) {
   .lienzo:not(.lienzo--portada) {
     display: grid;
-    grid-template-columns: 19rem minmax(0, 1fr);
+    grid-template-columns:
+      minmax(1.25rem, 1fr)
+      19rem
+      minmax(0, calc(var(--ancho) - 19rem - 3.5rem))
+      minmax(1.25rem, 1fr);
     column-gap: 3.5rem;
     align-items: start;
     padding-block-start: 3.5rem;
   }
 
-  .lienzo__encabezado {
+  .lienzo:not(.lienzo--portada) .lienzo__encabezado {
+    grid-column: 2;
+    max-inline-size: none;
+    margin: 0;
+    padding-inline: 0;
     position: sticky;
     inset-block-start: 7rem;
+  }
+
+  .lienzo:not(.lienzo--portada) .lienzo__contenido {
+    grid-column: 3;
+    max-inline-size: none;
     margin: 0;
+    padding-inline: 0;
   }
 
   .lienzo:not(.lienzo--portada) .titulo {
     font-size: 2.6rem;
   }
 
-  .lienzo:not(.lienzo--portada) .licencia {
-    grid-column: 1 / -1;
+  .lienzo:not(.lienzo--portada) > .licencia {
+    grid-column: 2 / 4;
+    max-inline-size: none;
+    padding-inline: 0;
   }
 
   .lienzo__contenido > :first-child {
@@ -857,7 +884,30 @@ a:hover {
 /* ---------- Portada ---------- */
 
 .lienzo--portada {
+  position: relative;
+  isolation: isolate;
   padding-block-start: clamp(2rem, 6vw, 4.5rem);
+  overflow-x: clip;
+}
+
+/* Fondo a todo el ancho de la ventana (no al de --ancho). */
+.lienzo--portada::before,
+.lienzo--portada::after {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  content: "";
+  pointer-events: none;
+}
+
+.lienzo--portada::before {
+  background-image: radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.13) 1px, transparent 0);
+  background-size: 26px 26px;
+  mask-image: radial-gradient(ellipse 90% 75% at 50% 28%, #000 18%, transparent 78%);
+}
+
+.lienzo--portada::after {
+  background: radial-gradient(42rem circle at 78% 28%, rgb(0 217 146 / 0.12), transparent 70%);
 }
 
 .portada {
@@ -868,24 +918,14 @@ a:hover {
   gap: 2.5rem;
 }
 
-/* Fondo de puntos y brillo: cubre todo el bloque de portada, también en pantallas altas o anchas. */
-.portada::before,
+/* El brillo sigue al puntero sobre toda la portada. */
 .portada::after {
   position: absolute;
-  inset: -6rem -2rem -4rem;
+  inset: -2rem -1.25rem;
   z-index: -1;
   content: "";
   pointer-events: none;
-}
-
-.portada::before {
-  background-image: radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.13) 1px, transparent 0);
-  background-size: 26px 26px;
-  mask-image: radial-gradient(ellipse 85% 80% at 50% 30%, #000 15%, transparent 78%);
-}
-
-.portada::after {
-  background: radial-gradient(36rem circle at var(--x, 78%) var(--y, 30%), rgb(0 217 146 / 0.13), transparent 70%);
+  background: radial-gradient(28rem circle at var(--x, 78%) var(--y, 30%), rgb(0 217 146 / 0.14), transparent 70%);
 }
 
 .portada__marcas {

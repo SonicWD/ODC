@@ -887,7 +887,7 @@ a:hover {
 
 .portada__titulo {
   margin: 0 0 1.25rem;
-  font-size: clamp(2.5rem, 1.4rem + 5vw, 4.75rem);
+  font-size: clamp(2.5rem, 1.4rem + 4vw, 4.25rem);
   font-weight: 500;
   letter-spacing: -0.04em;
   line-height: 1;
@@ -932,6 +932,21 @@ a:hover {
 
   .lienzo--portada .datos {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* Portátiles de poca altura: el título baja de tamaño para que Iniciar quede a la vista sin desplazar. */
+@media (min-width: 62rem) and (max-height: 52rem) {
+  .lienzo--portada {
+    padding-block-start: 2rem;
+  }
+
+  .portada__titulo {
+    font-size: 3.25rem;
+  }
+
+  .portada__acciones {
+    margin-block-start: 1.25rem;
   }
 }
 

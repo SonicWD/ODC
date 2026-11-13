@@ -11,7 +11,8 @@ import { MENU, ruta } from "@/lib/pantallas";
 import { reiniciar, useProgreso } from "@/lib/progreso";
 import { POBLACION, REA, SITIO, conBase } from "@/lib/sitio";
 
-// El brillo sigue al puntero sobre todo el lienzo (ancho completo), no solo sobre el texto.
+// Brillo del puntero: se mueve con transform (capa GPU) y un solo frame por animación.
+// No usa variables CSS en el degradado: eso repinta todo el lienzo y se traba.
 function useBrilloPuntero() {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -19,14 +20,51 @@ function useBrilloPuntero() {
     const lienzo = ref.current?.closest(".lienzo--portada");
     if (!(lienzo instanceof HTMLElement)) return;
 
-    function seguir(evento: PointerEvent) {
+    const fino = window.matchMedia("(pointer: fine)").matches;
+    const reducir = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!fino || reducir) return;
+
+    const brillo = document.createElement("div");
+    brillo.className = "portada__brillo";
+    brillo.setAttribute("aria-hidden", "true");
+    lienzo.prepend(brillo);
+
+    let x = 0;
+    let y = 0;
+    let origenX = 0;
+    let origenY = 0;
+    let marco = 0;
+
+    function medir() {
       const caja = lienzo.getBoundingClientRect();
-      lienzo.style.setProperty("--x", `${evento.clientX - caja.left}px`);
-      lienzo.style.setProperty("--y", `${evento.clientY - caja.top}px`);
+      origenX = caja.left;
+      origenY = caja.top;
     }
 
-    lienzo.addEventListener("pointermove", seguir);
-    return () => lienzo.removeEventListener("pointermove", seguir);
+    function pintar() {
+      marco = 0;
+      brillo.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
+    }
+
+    function seguir(evento: PointerEvent) {
+      x = evento.clientX - origenX;
+      y = evento.clientY - origenY;
+      if (!marco) marco = requestAnimationFrame(pintar);
+    }
+
+    medir();
+    const observador = new ResizeObserver(medir);
+    observador.observe(lienzo);
+    window.addEventListener("scroll", medir, { passive: true });
+    lienzo.addEventListener("pointermove", seguir, { passive: true });
+
+    return () => {
+      if (marco) cancelAnimationFrame(marco);
+      observador.disconnect();
+      window.removeEventListener("scroll", medir);
+      lienzo.removeEventListener("pointermove", seguir);
+      brillo.remove();
+    };
   }, []);
 
   return ref;

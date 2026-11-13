@@ -906,13 +906,31 @@ a:hover {
   mask-image: radial-gradient(ellipse 90% 75% at 50% 28%, #000 18%, transparent 78%);
 }
 
-/* El brillo sigue al puntero a todo el ancho del lienzo (mismo alcance que el fondo de puntos). */
+/* Halo estático de ambiente (no sigue al puntero; no se recalcula). */
 .lienzo--portada::after {
-  background: radial-gradient(
-    32rem circle at var(--x, 78%) var(--y, 28%),
-    rgb(0 217 146 / 0.16),
-    transparent 70%
-  );
+  background: radial-gradient(42rem circle at 78% 28%, rgb(0 217 146 / 0.1), transparent 70%);
+}
+
+/* Mancha que sigue al ratón: solo se mueve con transform (sin repintar el degradado). */
+.portada__brillo {
+  position: absolute;
+  z-index: -1;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: min(36rem, 70vw);
+  block-size: min(36rem, 70vw);
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, rgb(0 217 146 / 0.2), transparent 68%);
+  transform: translate3d(-50%, -50%, 0);
+  will-change: transform;
+  contain: strict;
+}
+
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .portada__brillo {
+    display: none;
+  }
 }
 
 .portada {

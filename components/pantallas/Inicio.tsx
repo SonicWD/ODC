@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Fragment, type CSSProperties, type PointerEvent } from "react";
+import { Fragment, useEffect, useRef, type CSSProperties } from "react";
 import { BotonEscuchar } from "@/components/Guia";
 import { MenuLista } from "@/components/MenuLista";
 import { Prueba } from "@/components/Prueba";
@@ -11,16 +11,32 @@ import { MENU, ruta } from "@/lib/pantallas";
 import { reiniciar, useProgreso } from "@/lib/progreso";
 import { POBLACION, REA, SITIO, conBase } from "@/lib/sitio";
 
-// El brillo del fondo sigue al puntero. Es decorativo y solo se ve si el usuario acepta movimiento.
-function seguirPuntero(evento: PointerEvent<HTMLDivElement>) {
-  const caja = evento.currentTarget.getBoundingClientRect();
-  evento.currentTarget.style.setProperty("--x", `${evento.clientX - caja.left}px`);
-  evento.currentTarget.style.setProperty("--y", `${evento.clientY - caja.top}px`);
+// El brillo sigue al puntero sobre todo el lienzo (ancho completo), no solo sobre el texto.
+function useBrilloPuntero() {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const lienzo = ref.current?.closest(".lienzo--portada");
+    if (!(lienzo instanceof HTMLElement)) return;
+
+    function seguir(evento: PointerEvent) {
+      const caja = lienzo.getBoundingClientRect();
+      lienzo.style.setProperty("--x", `${evento.clientX - caja.left}px`);
+      lienzo.style.setProperty("--y", `${evento.clientY - caja.top}px`);
+    }
+
+    lienzo.addEventListener("pointermove", seguir);
+    return () => lienzo.removeEventListener("pointermove", seguir);
+  }, []);
+
+  return ref;
 }
 
 export function Portada() {
+  const portadaRef = useBrilloPuntero();
+
   return (
-    <div className="portada" onPointerMove={seguirPuntero}>
+    <div className="portada" ref={portadaRef}>
       <div className="portada__texto">
         <div className="portada__marcas">
           <Image

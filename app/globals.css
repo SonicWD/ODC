@@ -906,26 +906,20 @@ a:hover {
   mask-image: radial-gradient(ellipse 90% 75% at 50% 28%, #000 18%, transparent 78%);
 }
 
+/* El brillo sigue al puntero a todo el ancho del lienzo (mismo alcance que el fondo de puntos). */
 .lienzo--portada::after {
-  background: radial-gradient(42rem circle at 78% 28%, rgb(0 217 146 / 0.12), transparent 70%);
+  background: radial-gradient(
+    32rem circle at var(--x, 78%) var(--y, 28%),
+    rgb(0 217 146 / 0.16),
+    transparent 70%
+  );
 }
 
 .portada {
   position: relative;
-  isolation: isolate;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 2.5rem;
-}
-
-/* El brillo sigue al puntero sobre toda la portada. */
-.portada::after {
-  position: absolute;
-  inset: -2rem -1.25rem;
-  z-index: -1;
-  content: "";
-  pointer-events: none;
-  background: radial-gradient(28rem circle at var(--x, 78%) var(--y, 30%), rgb(0 217 146 / 0.14), transparent 70%);
 }
 
 .portada__marcas {

@@ -17,8 +17,10 @@ function useBrilloPuntero() {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const lienzo = ref.current?.closest(".lienzo--portada");
-    if (!(lienzo instanceof HTMLElement)) return;
+    const encontrado = ref.current?.closest(".lienzo--portada");
+    if (!(encontrado instanceof HTMLElement)) return;
+    // Constante local: TypeScript no conserva el narrowing de instanceof dentro de closures.
+    const panel: HTMLElement = encontrado;
 
     const fino = window.matchMedia("(pointer: fine)").matches;
     const reducir = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -27,7 +29,7 @@ function useBrilloPuntero() {
     const brillo = document.createElement("div");
     brillo.className = "portada__brillo";
     brillo.setAttribute("aria-hidden", "true");
-    lienzo.prepend(brillo);
+    panel.prepend(brillo);
 
     let x = 0;
     let y = 0;
@@ -36,7 +38,7 @@ function useBrilloPuntero() {
     let marco = 0;
 
     function medir() {
-      const caja = lienzo.getBoundingClientRect();
+      const caja = panel.getBoundingClientRect();
       origenX = caja.left;
       origenY = caja.top;
     }
@@ -54,15 +56,15 @@ function useBrilloPuntero() {
 
     medir();
     const observador = new ResizeObserver(medir);
-    observador.observe(lienzo);
+    observador.observe(panel);
     window.addEventListener("scroll", medir, { passive: true });
-    lienzo.addEventListener("pointermove", seguir, { passive: true });
+    panel.addEventListener("pointermove", seguir, { passive: true });
 
     return () => {
       if (marco) cancelAnimationFrame(marco);
       observador.disconnect();
       window.removeEventListener("scroll", medir);
-      lienzo.removeEventListener("pointermove", seguir);
+      panel.removeEventListener("pointermove", seguir);
       brillo.remove();
     };
   }, []);
